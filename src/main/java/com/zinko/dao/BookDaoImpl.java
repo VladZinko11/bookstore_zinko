@@ -23,6 +23,7 @@ public class BookDaoImpl implements BookDao {
             if (date != null) {
                 statement.setDate(4, new Date(date.getDayOfMonth(), date.getMonthValue(), date.getYear()));
             }else statement.setDate(4, null);
+            statement.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
         }

@@ -61,6 +61,10 @@ public class Book {
 
     @Override
     public String toString() {
-        return super.toString();
+        return "id = " + this.id +
+                ", author is " + this.author +
+                ", title is " + this.title +
+                ", isbn = " + this.isbn +
+                ", publication date = " + (this.publicationDate != null ? this.publicationDate.getYear() : null);
     }
 }

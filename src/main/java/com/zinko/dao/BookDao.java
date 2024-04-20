@@ -8,7 +8,7 @@ public interface BookDao {
 
     void creatBook(Book book);
 
-    Book findBookById(int id);
+    Book findBookById(Long id);
 
     List<Book> findAllBook();
 

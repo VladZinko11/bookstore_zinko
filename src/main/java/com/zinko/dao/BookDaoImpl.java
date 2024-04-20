@@ -4,9 +4,11 @@ import com.zinko.model.Book;
 
 import java.sql.*;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 public class BookDaoImpl implements BookDao {
+
 
     public static final String URL = "jdbc:postgresql://localhost:5432/bookstore_bh";
     public static final String USER = "postgres";
@@ -19,10 +21,7 @@ public class BookDaoImpl implements BookDao {
             statement.setString(1, book.getAuthor());
             statement.setString(2, book.getTitle());
             statement.setString(3, book.getIsbn());
-            LocalDate date = book.getPublicationDate();
-            if (date != null) {
-                statement.setDate(4, new Date(date.getDayOfMonth(), date.getMonthValue(), date.getYear()));
-            }else statement.setDate(4, null);
+            statement.setDate(4, Date.valueOf(book.getPublicationDate()));
             statement.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -31,13 +30,50 @@ public class BookDaoImpl implements BookDao {
     }
 
     @Override
-    public Book findBookById(int id) {
-        return null;
+    public Book findBookById(Long id) {
+        try (Connection connection = DriverManager.getConnection(URL, USER, PASSWORD)) {
+            PreparedStatement statement = connection.prepareStatement("SELECT id, author, title, isbn, publication_date FROM book WHERE id=?");
+            statement.setLong(1, id);
+            ResultSet resultSet = statement.executeQuery();
+            resultSet.next();
+            Book book = new Book();
+            book.setId(resultSet.getLong(1));
+            book.setAuthor(resultSet.getString(2));
+            book.setTitle(resultSet.getString(3));
+            book.setIsbn(resultSet.getString(4));
+            if(resultSet.getDate(5)!=null) {
+                book.setPublicationDate(resultSet.getDate(5).toLocalDate());
+            } else book.setPublicationDate(null);
+            return book;
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
+        } throw new RuntimeException();
     }
 
     @Override
     public List<Book> findAllBook() {
-        return null;
+        List<Book>list = new ArrayList<>();
+        try (Connection connection = DriverManager.getConnection(URL, USER, PASSWORD)) {
+            Statement statement = connection.createStatement();
+            ResultSet resultSet = statement.executeQuery("SELECT id, author, title, isbn, publication_date FROM book");
+            while (resultSet.next()) {
+                Book book = new Book();
+                book.setId(resultSet.getLong(1));
+                book.setAuthor(resultSet.getString(2));
+                book.setTitle(resultSet.getString(3));
+                book.setIsbn(resultSet.getString(4));
+                if(resultSet.getDate(5)!=null) {
+                    book.setPublicationDate(resultSet.getDate(5).toLocalDate());
+                } else book.setPublicationDate(null);
+                list.add(book);
+            }
+            return list;
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
+        }
+        throw new RuntimeException();
     }
 
     @Override

@@ -1,6 +1,6 @@
 package com.zinko.dao;
 
-import com.zinko.data.Book;
+import com.zinko.model.Book;
 
 import java.util.List;
 
@@ -19,5 +19,15 @@ public interface BookDao {
     boolean updateBook(Book book);
 
     boolean deleteBook(int id);
+
+    List<Book> findByAuthor(String author);
+
+    Long countAll();
+
+    void updateRS(Book book);
+
+    void createRs(Book book);
+
+    void printTableInfo();
 
 }

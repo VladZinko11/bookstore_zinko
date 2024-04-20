@@ -6,13 +6,9 @@ import java.time.LocalDate;
 public class Book {
 
     private Long id;
-
     private String author;
-
     private String title;
-
     private String isbn;
-
     private LocalDate publicationDate;
 
     public Book() {

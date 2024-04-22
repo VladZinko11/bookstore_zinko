@@ -1,16 +1,14 @@
-package com.zinko.dao;
+package com.zinko.data.dao.impl;
 
-import com.zinko.model.Book;
+import com.zinko.data.dao.entity.Book;
+import com.zinko.data.dao.BookDao;
+import com.zinko.data.dao.connection.ConnectionContext;
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
 public class BookDaoImpl implements BookDao {
-
-    public static final String URL = "jdbc:postgresql://localhost:5432/bookstore_bh";
-    public static final String USER = "postgres";
-    public static final String PASSWORD = "root";
     public static final String SELECT_COUNT = "SELECT COUNT(*) FROM book";
     public static final String SELECT_ALL_BY_AUTHOR = "SELECT id, author, title, isbn, publication_date FROM book WHERE author=?";
     public static final String DELETE = "DELETE FROM book WHERE id=?";
@@ -43,7 +41,7 @@ public class BookDaoImpl implements BookDao {
     
     @Override
     public void creatBook(Book book) {
-        try (Connection connection = DriverManager.getConnection(URL, USER, PASSWORD)) {
+        try (Connection connection = ConnectionContext.getConnection()) {
             PreparedStatement statement = connection.prepareStatement(INSERT);
             statement.setString(PARAMETER_INDEX_1, book.getAuthor());
             statement.setString(PARAMETER_INDEX_2, book.getTitle());
@@ -58,7 +56,7 @@ public class BookDaoImpl implements BookDao {
 
     @Override
     public Book findBookById(Long id) {
-        try (Connection connection = DriverManager.getConnection(URL, USER, PASSWORD)) {
+        try (Connection connection = ConnectionContext.getConnection()) {
             PreparedStatement statement = connection.prepareStatement(SELECT_BY_ID);
             statement.setLong(PARAMETER_INDEX_1, id);
             ResultSet resultSet = statement.executeQuery();
@@ -74,7 +72,7 @@ public class BookDaoImpl implements BookDao {
     @Override
     public List<Book> findAllBook() {
         List<Book> list = new ArrayList<>();
-        try (Connection connection = DriverManager.getConnection(URL, USER, PASSWORD)) {
+        try (Connection connection = ConnectionContext.getConnection()) {
             Statement statement = connection.createStatement();
             ResultSet resultSet = statement.executeQuery(SELECT_ALL);
             while (resultSet.next()) {
@@ -89,7 +87,7 @@ public class BookDaoImpl implements BookDao {
 
     @Override
     public Book findBookByIsbn(String isbn) {
-        try (Connection connection = DriverManager.getConnection(URL, USER, PASSWORD)) {
+        try (Connection connection = ConnectionContext.getConnection()) {
             PreparedStatement statement = connection.prepareStatement(SELECT_BY_ISBN);
             statement.setString(PARAMETER_INDEX_1, isbn);
             ResultSet resultSet = statement.executeQuery();
@@ -104,7 +102,7 @@ public class BookDaoImpl implements BookDao {
 
     @Override
     public boolean updateBook(Book book) {
-        try (Connection connection = DriverManager.getConnection(URL, USER, PASSWORD)) {
+        try (Connection connection = ConnectionContext.getConnection()) {
             PreparedStatement statement = connection.prepareStatement(SELECT_BY_ISBN);
             statement.setString(PARAMETER_INDEX_1, book.getIsbn());
             ResultSet resultSet = statement.executeQuery();
@@ -125,7 +123,7 @@ public class BookDaoImpl implements BookDao {
 
     @Override
     public boolean deleteBook(Long id) {
-        try (Connection connection = DriverManager.getConnection(URL, USER, PASSWORD)) {
+        try (Connection connection = ConnectionContext.getConnection()) {
             PreparedStatement statement = connection.prepareStatement(SELECT_BY_ID);
             statement.setLong(PARAMETER_INDEX_1, id);
             ResultSet resultSet = statement.executeQuery();
@@ -144,7 +142,7 @@ public class BookDaoImpl implements BookDao {
     @Override
     public List<Book> findByAuthor(String author) {
         List<Book> list = new ArrayList<>();
-        try (Connection connection = DriverManager.getConnection(URL, USER, PASSWORD)) {
+        try (Connection connection = ConnectionContext.getConnection()) {
             PreparedStatement statement = connection.prepareStatement(SELECT_ALL_BY_AUTHOR);
             statement.setString(PARAMETER_INDEX_1, author);
             ResultSet resultSet = statement.executeQuery();
@@ -160,7 +158,7 @@ public class BookDaoImpl implements BookDao {
 
     @Override
     public Long countAll() {
-        try (Connection connection = DriverManager.getConnection(URL, USER, PASSWORD)) {
+        try (Connection connection = ConnectionContext.getConnection()) {
             Statement statement = connection.createStatement();
             ResultSet resultSet = statement.executeQuery(SELECT_COUNT);
             resultSet.next();

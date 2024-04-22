@@ -27,6 +27,6 @@ public class BookDto {
 
     @Override
     public String toString() {
-        return author + " " + title;
+        return author + " | " + title;
     }
 }

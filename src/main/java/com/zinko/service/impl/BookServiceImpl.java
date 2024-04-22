@@ -16,7 +16,7 @@ public class BookServiceImpl implements BookService {
         BookDto bookDto = new BookDto();
         bookDto.setAuthor(book.getAuthor());
         bookDto.setTitle(book.getTitle());
-        return null;
+        return bookDto;
     }
 
     @Override

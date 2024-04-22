@@ -62,8 +62,9 @@ public class BookDaoImpl implements BookDao {
             PreparedStatement statement = connection.prepareStatement(SELECT_BY_ID);
             statement.setLong(PARAMETER_INDEX_1, id);
             ResultSet resultSet = statement.executeQuery();
-            resultSet.next();
+            if(resultSet.next())
             return creatAndInitBookFromResultSet(resultSet);
+            else return null;
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -92,8 +93,9 @@ public class BookDaoImpl implements BookDao {
             PreparedStatement statement = connection.prepareStatement(SELECT_BY_ISBN);
             statement.setString(PARAMETER_INDEX_1, isbn);
             ResultSet resultSet = statement.executeQuery();
-            resultSet.next();
+            if(resultSet.next())
             return creatAndInitBookFromResultSet(resultSet);
+            else return null;
         } catch (SQLException e) {
             e.printStackTrace();
         }

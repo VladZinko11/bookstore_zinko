@@ -2,6 +2,7 @@ package com.zinko.service;
 
 import com.zinko.service.dto.BookDto;
 
+import java.time.LocalDate;
 import java.util.List;
 
 public interface BookService {
@@ -12,7 +13,7 @@ public interface BookService {
 
     BookDto create(String author, String title, String isbn, int year);
 
-    BookDto update();
+    boolean update(String author, String title, String isbn, LocalDate publicationDate);
 
     boolean delete(Long id);
 

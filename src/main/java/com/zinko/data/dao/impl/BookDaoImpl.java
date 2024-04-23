@@ -38,7 +38,7 @@ public class BookDaoImpl implements BookDao {
         } else book.setPublicationDate(null);
         return book;
     }
-    
+
     @Override
     public void creatBook(Book book) {
         try (Connection connection = ConnectionContext.getConnection()) {
@@ -60,8 +60,8 @@ public class BookDaoImpl implements BookDao {
             PreparedStatement statement = connection.prepareStatement(SELECT_BY_ID);
             statement.setLong(PARAMETER_INDEX_1, id);
             ResultSet resultSet = statement.executeQuery();
-            if(resultSet.next())
-            return creatAndInitBookFromResultSet(resultSet);
+            if (resultSet.next())
+                return creatAndInitBookFromResultSet(resultSet);
             else return null;
         } catch (SQLException e) {
             e.printStackTrace();
@@ -91,8 +91,8 @@ public class BookDaoImpl implements BookDao {
             PreparedStatement statement = connection.prepareStatement(SELECT_BY_ISBN);
             statement.setString(PARAMETER_INDEX_1, isbn);
             ResultSet resultSet = statement.executeQuery();
-            if(resultSet.next())
-            return creatAndInitBookFromResultSet(resultSet);
+            if (resultSet.next())
+                return creatAndInitBookFromResultSet(resultSet);
             else return null;
         } catch (SQLException e) {
             e.printStackTrace();
@@ -102,11 +102,9 @@ public class BookDaoImpl implements BookDao {
 
     @Override
     public boolean updateBook(Book book) {
-        try (Connection connection = ConnectionContext.getConnection()) {
-            PreparedStatement statement = connection.prepareStatement(SELECT_BY_ISBN);
-            statement.setString(PARAMETER_INDEX_1, book.getIsbn());
-            ResultSet resultSet = statement.executeQuery();
-            if (resultSet.next()) {
+        Book book1 = findBookByIsbn(book.getIsbn());
+        if (book1 != null) {
+            try (Connection connection = ConnectionContext.getConnection()) {
                 PreparedStatement statement1 = connection.prepareStatement(UPDATE);
                 statement1.setString(PARAMETER_INDEX_1, book.getAuthor());
                 statement1.setString(PARAMETER_INDEX_2, book.getTitle());
@@ -114,10 +112,10 @@ public class BookDaoImpl implements BookDao {
                 statement1.setString(PARAMETER_INDEX_4, book.getIsbn());
                 statement1.executeUpdate();
                 return true;
-            } else return false;
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        } else return false;
         throw new RuntimeException();
     }
 
@@ -127,7 +125,7 @@ public class BookDaoImpl implements BookDao {
             PreparedStatement statement = connection.prepareStatement(SELECT_BY_ID);
             statement.setLong(PARAMETER_INDEX_1, id);
             ResultSet resultSet = statement.executeQuery();
-            if(resultSet.next()) {
+            if (resultSet.next()) {
                 PreparedStatement statement1 = connection.prepareStatement(DELETE);
                 statement1.setLong(PARAMETER_INDEX_1, id);
                 statement1.executeUpdate();
@@ -163,8 +161,7 @@ public class BookDaoImpl implements BookDao {
             ResultSet resultSet = statement.executeQuery(SELECT_COUNT);
             resultSet.next();
             return resultSet.getLong(1);
-        }
-        catch (SQLException e) {
+        } catch (SQLException e) {
             e.printStackTrace();
         }
         throw new RuntimeException();

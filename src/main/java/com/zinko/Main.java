@@ -23,9 +23,13 @@ public class Main {
         InitDb();
         Scanner scanner = new Scanner(System.in);
         boolean execution = true;
-        System.out.println("Введите команду: \n     all - для получения каталога всех книг" +
-                "\n     get - для получения книги по id \n     delete - для удадения книги по id" +
-                "\n     create - для создания и добавления книги \n     exit - для завершения работы с каталогом");
+        System.out.println("""
+                Введите команду:\s
+                     all - для получения каталога всех книг
+                     get - для получения книги по id\s
+                     delete - для удадения книги по id
+                     create - для создания и добавления книги\s
+                     exit - для завершения работы с каталогом""");
         while (execution) {
             String command = scanner.nextLine();
             switch (command) {

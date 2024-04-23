@@ -1,5 +1,7 @@
 DROP TABLE IF EXISTS book;
 
+
+
 CREATE TABLE public.book
 (
     id BIGSERIAL UNIQUE PRIMARY KEY,

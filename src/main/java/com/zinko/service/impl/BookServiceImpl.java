@@ -41,8 +41,13 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public BookDto update() {
-        return null;
+    public boolean update(String author, String title, String isbn, LocalDate publicationDate) {
+        Book book = new Book();
+        book.setAuthor(author);
+        book.setTitle(title);
+        book.setIsbn(isbn);
+        book.setPublicationDate(publicationDate);
+        return bookDao.updateBook(book);
     }
 
     @Override

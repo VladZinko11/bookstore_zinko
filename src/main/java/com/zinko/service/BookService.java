@@ -1,32 +1,24 @@
 package com.zinko.service;
 
-import com.zinko.dao.BookDao;
-import com.zinko.dao.BookDaoImpl;
-import com.zinko.model.Book;
+import com.zinko.service.dto.BookDto;
 
 import java.time.LocalDate;
+import java.util.List;
 
-public class BookService {
-    BookDaoImpl bookDao = new BookDaoImpl();
+public interface BookService {
 
-    public void findAllBook() {
-        bookDao.findAllBook().forEach(System.out::println);
-    }
+    BookDto findById(Long id);
 
-    public void findBookById(Long id) {
-        System.out.println(bookDao.findBookById(id));
-    }
+    List<BookDto> findAll();
 
-    public void deleteBook(Long id) {
-        System.out.println(bookDao.deleteBook(id));
-    }
+    BookDto create(String author, String title, String isbn, int year);
 
-    public void createBook(String author, String title, String isbn, int year) {
-        Book book = new Book();
-        book.setAuthor(author);
-        book.setTitle(title);
-        book.setIsbn(isbn);
-        book.setPublicationDate(LocalDate.of(year, 1, 1));
-        bookDao.creatBook(book);
-    }
+    boolean update(String author, String title, String isbn, LocalDate publicationDate);
+
+    boolean delete(Long id);
+
+
+
+
+
 }

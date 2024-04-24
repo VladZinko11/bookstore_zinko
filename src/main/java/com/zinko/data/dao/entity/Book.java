@@ -1,4 +1,4 @@
-package com.zinko.model;
+package com.zinko.data.dao.entity;
 
 
 import java.time.LocalDate;

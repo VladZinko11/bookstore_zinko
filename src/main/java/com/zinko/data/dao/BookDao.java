@@ -1,6 +1,6 @@
-package com.zinko.dao;
+package com.zinko.data.dao;
 
-import com.zinko.model.Book;
+import com.zinko.data.dao.entity.Book;
 
 import java.util.List;
 

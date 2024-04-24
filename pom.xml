@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<project xmlns="http://maven.apache.org/POM/4.0.0">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.zinko</groupId>
+    <artifactId>bookstore</artifactId>
+    <version>1.0.0</version>
+
+    <packaging>jar</packaging>
+
+    <properties>
+        <maven.compiler.target>21</maven.compiler.target>
+        <maven.compiler.source>21</maven.compiler.source>
+    </properties>
+
+    <dependencies>
+            <dependency>
+                <groupId>org.postgresql</groupId>
+                <artifactId>postgresql</artifactId>
+                <version>42.7.3</version>
+            </dependency>
+    </dependencies>
+
+</project>

@@ -9,8 +9,6 @@
 out/
 #Files created when code is executed
 *.class
-*.log
 # Directory-based project format:
 .idea/
 target
-*.iml

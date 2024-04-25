@@ -1,9 +1,10 @@
 DROP TABLE IF EXISTS public.user;
 
-CREATE TYPE E_ROLE AS ENUM (
-    'ADMIN',
-    'CUSTOMER'
-    );
+-- CREATE TYPE E_ROLE AS ENUM (
+--     'ADMIN',
+--     'CUSTOMER',
+--     'MANAGER'
+--     );
 
 CREATE TABLE public.user
 (

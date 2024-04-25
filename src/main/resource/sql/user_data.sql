@@ -1,4 +1,4 @@
-INSERT INTO "user"(
+INSERT INTO public.user(
                  first_name, last_name, email, password, role
 ) VALUES ('Vlad', 'Zinko', 'zinko1996@yandex.ru', '12345678', 'ADMIN'),
          ('Max', 'Holloway', 'holloway@gmail.ru', md5(random()::text)::char(10), 'CUSTOMER'),

@@ -1,0 +1,22 @@
+INSERT INTO "user"(
+                 first_name, last_name, email, password, role
+) VALUES ('Vlad', 'Zinko', 'zinko1996@yandex.ru', '12345678', 'ADMIN'),
+         ('Max', 'Holloway', 'holloway@gmail.ru', md5(random()::text)::char(10), 'CUSTOMER'),
+         ('Dustin', 'Poirier', 'poirier@gmail.ru', md5(random()::text)::char(10), 'CUSTOMER'),
+         ('Justin', 'Gaethje', 'gaethje@gmail.ru', md5(random()::text)::char(10), 'CUSTOMER'),
+         ('Charles', 'Oliveira', 'oliveira@gmail.ru', md5(random()::text)::char(10), 'CUSTOMER'),
+         ('Arman', 'Tsarukyan', 'tsarukyan@gmail.ru', md5(random()::text)::char(10), 'CUSTOMER'),
+         ('Mateusz', 'Gamrot', 'gamrot@gmail.ru', md5(random()::text)::char(10), 'CUSTOMER'),
+         ('Beneil', 'Dariush', 'dariush@gmail.ru', md5(random()::text)::char(10), 'CUSTOMER'),
+         ('Michael', 'Chandler', 'chandler@gmail.ru', md5(random()::text)::char(10), 'CUSTOMER'),
+         ('Rafael', 'Fiziev', 'fisiev@gmail.ru', md5(random()::text)::char(10), 'CUSTOMER'),
+         ('Renato', 'Moicano', 'moicano@gmail.ru', md5(random()::text)::char(10), 'CUSTOMER'),
+         ('Dan', 'Hooker', 'hooker@gmail.ru', md5(random()::text)::char(10), 'CUSTOMER'),
+         ('Jalin', 'Turner', 'turner@gmail.ru', md5(random()::text)::char(10), 'CUSTOMER'),
+         ('Benoit', 'Saint Denis', 'benoit@gmail.ru', md5(random()::text)::char(10), 'CUSTOMER'),
+         ('Rafael', 'Dos Anjos', 'rafael@gmail.ru', md5(random()::text)::char(10), 'CUSTOMER'),
+         ('Bobby', 'Green', 'green@gmail.ru', md5(random()::text)::char(10), 'CUSTOMER'),
+         ('Ilia', 'Topuria', 'topuria@gmail.ru', md5(random()::text)::char(10), 'CUSTOMER'),
+         ('Brian', 'Ortega', 'ortega@gmail.ru', md5(random()::text)::char(10), 'CUSTOMER'),
+         ('Yair', 'Rodriguez', 'rodriguez@gmail.ru', md5(random()::text)::char(10), 'CUSTOMER'),
+         ('Arnold', 'Alen', 'alen@gmail.ru', md5(random()::text)::char(10), 'CUSTOMER');

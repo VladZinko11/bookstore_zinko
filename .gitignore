@@ -11,4 +11,5 @@ out/
 *.iml
 #Files created when code is executed
 *.class
+*.log
 target/

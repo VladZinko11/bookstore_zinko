@@ -7,8 +7,8 @@
 /dataSources.local.xml
 # IntelliJ
 out/
+.idea/
+*.iml
 #Files created when code is executed
 *.class
-# Directory-based project format:
-.idea/
-target
+target/

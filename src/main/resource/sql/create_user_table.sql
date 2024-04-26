@@ -1,11 +1,10 @@
 DROP TABLE IF EXISTS public.user;
+DROP TABLE IF EXISTS public.enum_role;
 
--- CREATE TYPE E_ROLE AS ENUM (
---     'ADMIN',
---     'CUSTOMER',
---     'MANAGER'
---     );
-
+CREATE TABLE public.enum_role (
+    id BIGSERIAL UNIQUE PRIMARY KEY,
+    role VARCHAR(8)
+);
 CREATE TABLE public.user
 (
     id BIGSERIAL UNIQUE PRIMARY KEY,
@@ -13,5 +12,5 @@ CREATE TABLE public.user
     last_name VARCHAR(50),
     email VARCHAR(50) UNIQUE,
     password VARCHAR(20),
-    role E_ROLE
+    id_enum_role BIGINT
 );

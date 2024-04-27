@@ -166,6 +166,6 @@ public class UserDaoImpl implements UserDao {
         catch (SQLException e) {
 
         }
-        return null;
+        throw new RuntimeException();
     }
 }

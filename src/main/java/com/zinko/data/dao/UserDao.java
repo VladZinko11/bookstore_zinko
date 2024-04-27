@@ -12,13 +12,14 @@ public interface UserDao {
 
     List<User> findAll();
 
-    boolean update();
+    boolean update(User user);
 
-    boolean delete();
+    boolean delete(User user);
 
     User findByEmail(String email);
 
     List<User> findByLastName(String LastName);
 
     Long countAll();
+
 }

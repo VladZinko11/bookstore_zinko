@@ -2,6 +2,7 @@ package com.zinko.service.impl;
 
 import com.zinko.data.dao.UserDao;
 import com.zinko.data.dao.entity.User;
+import com.zinko.data.dao.entity.enums.Role;
 import com.zinko.data.dao.impl.UserDaoImpl;
 import com.zinko.service.UserService;
 import com.zinko.service.dto.UserDto;
@@ -13,12 +14,26 @@ public class UserServiceImpl implements UserService {
 
     private final UserDao userDao = new UserDaoImpl();
 
-    private static UserDto createUserDtoFromUser(User user) {
-        UserDto userDto = new UserDto();
-        userDto.setFirsName(user.getFirstName());
-        userDto.setLastName(user.getLastName());
-        userDto.setEmail(user.getEmail());
-        return userDto;
+    @Override
+    public UserDto createUserDtoFromUser(User user) {
+        if(user!=null) {
+            UserDto userDto = new UserDto();
+            userDto.setFirstName(user.getFirstName());
+            userDto.setLastName(user.getLastName());
+            userDto.setEmail(user.getEmail());
+            return userDto;
+        } else return null;
+    }
+    @Override
+    public User createUser(Long id, String firstName, String lsatName, String email, String password, String role) {
+        User user = new User();
+        user.setId(id);
+        user.setFirstName(firstName);
+        user.setLastName(lsatName);
+        user.setEmail(email);
+        user.setPassword(password);
+        user.setRole(Role.valueOf(role));
+        return user;
     }
 
     @Override
@@ -45,12 +60,22 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public boolean update(User user) {
+        User userBefore = userDao.findById(user.getId());
+        if(user.getFirstName().equals(""))
+            user.setFirstName(userBefore.getFirstName());
+        if(user.getLastName().equals(""))
+            user.setLastName(userBefore.getLastName());
+        if(user.getEmail().equals(""))
+            user.setEmail(userBefore.getEmail());
+        if(user.getPassword().equals(""))
+            user.setPassword(userBefore.getPassword());
+        if(user.getRole().equals(""))
+            user.setRole(userBefore.getRole());
         return userDao.update(user);
     }
 
-    @Override
-    public boolean delete(User user) {
-        return userDao.delete(user);
+    public boolean delete(Long id) {
+        return userDao.delete(userDao.findById(id));
     }
 
     @Override

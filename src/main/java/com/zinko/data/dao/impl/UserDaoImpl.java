@@ -24,6 +24,7 @@ public class UserDaoImpl implements UserDao {
     public static final int COLUMN_INDEX_4 = 4;
     public static final int COLUMN_INDEX_5 = 5;
     public static final int COLUMN_INDEX_6 = 6;
+    public static final int PARAMETER_INDEX_6 = 6;
 
     private static User getUserFromResulSet(ResultSet resultSet) throws SQLException {
         User user = new User();
@@ -48,16 +49,18 @@ public class UserDaoImpl implements UserDao {
     @Override
     public boolean create(User user) {
         try (Connection connection = ConnectionContext.getConnection()) {
-            PreparedStatement statement = connection.prepareStatement(
-                    "INSERT INTO public.user (first_name, last_name, email, password, id_enum_role) " +
-                            "VALUES (?, ?, ?, ?, ?)");
-            statement.setString(PARAMETER_INDEX_1, user.getFirstName());
-            statement.setString(PARAMETER_INDEX_2, user.getLastName());
-            statement.setString(PARAMETER_INDEX_3, user.getEmail());
-            statement.setString(PARAMETER_INDEX_4, user.getPassword());
-            statement.setLong(PARAMETER_INDEX_5, getIdRole(user, connection));
-            statement.executeUpdate();
-            return true;
+            if (findByEmail(user.getEmail()) == null) {
+                PreparedStatement statement = connection.prepareStatement(
+                        "INSERT INTO public.user (first_name, last_name, email, password, id_enum_role) " +
+                                "VALUES (?, ?, ?, ?, ?)");
+                statement.setString(PARAMETER_INDEX_1, user.getFirstName());
+                statement.setString(PARAMETER_INDEX_2, user.getLastName());
+                statement.setString(PARAMETER_INDEX_3, user.getEmail());
+                statement.setString(PARAMETER_INDEX_4, user.getPassword());
+                statement.setLong(PARAMETER_INDEX_5, getIdRole(user, connection));
+                statement.executeUpdate();
+                return true;
+            } else return false;
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -71,6 +74,7 @@ public class UserDaoImpl implements UserDao {
             statement.setLong(PARAMETER_INDEX_1, id);
             ResultSet resultSet = statement.executeQuery();
             if (resultSet.next()) return getUserFromResulSet(resultSet);
+            else return null;
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -104,6 +108,8 @@ public class UserDaoImpl implements UserDao {
                 statement.setString(PARAMETER_INDEX_3, user.getEmail());
                 statement.setString(PARAMETER_INDEX_4, user.getPassword());
                 statement.setLong(PARAMETER_INDEX_5, getIdRole(user, connection));
+                statement.setLong(PARAMETER_INDEX_6, user.getId());
+                statement.executeUpdate();
                 return true;
             } else return false;
         } catch (SQLException e) {
@@ -117,6 +123,8 @@ public class UserDaoImpl implements UserDao {
         try (Connection connection = ConnectionContext.getConnection()) {
             if (findById(user.getId()) != null) {
                 PreparedStatement statement = connection.prepareStatement("DELETE FROM public.user WHERE id=?");
+                statement.setLong(PARAMETER_INDEX_1, user.getId());
+                statement.executeUpdate();
                 return true;
             } else return false;
         } catch (SQLException e) {
@@ -132,6 +140,7 @@ public class UserDaoImpl implements UserDao {
             statement.setString(PARAMETER_INDEX_1, email);
             ResultSet resultSet = statement.executeQuery();
             if (resultSet.next()) return getUserFromResulSet(resultSet);
+            else return null;
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -157,13 +166,12 @@ public class UserDaoImpl implements UserDao {
 
     @Override
     public Long countAll() {
-        try(Connection connection = ConnectionContext.getConnection()) {
+        try (Connection connection = ConnectionContext.getConnection()) {
             Statement statement = connection.createStatement();
             ResultSet resultSet = statement.executeQuery("SELECT COUNT(*) FROM public.user");
             resultSet.next();
             return resultSet.getLong(COLUMN_INDEX_1);
-        }
-        catch (SQLException e) {
+        } catch (SQLException e) {
 
         }
         throw new RuntimeException();

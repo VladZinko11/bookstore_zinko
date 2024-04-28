@@ -14,9 +14,13 @@ public interface UserService {
 
     boolean update(User user);
 
-    boolean delete(User user);
+    boolean delete(Long id);
 
     UserDto login(String email, String password);
+
+    User createUser(Long id, String firstName, String lsatName, String email, String password, String role);
+
+    UserDto createUserDtoFromUser(User user);
 
 
 }

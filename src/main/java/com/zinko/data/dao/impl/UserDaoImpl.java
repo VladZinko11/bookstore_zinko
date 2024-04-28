@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class UserDaoImpl implements UserDao {
-    private static final Logger logger = LogManager.getLogger();
+    private static final Logger log = LogManager.getLogger(UserDaoImpl.class);
     public static final int PARAMETER_INDEX_1 = 1;
     public static final int PARAMETER_INDEX_2 = 2;
     public static final int PARAMETER_INDEX_3 = 3;
@@ -41,6 +41,7 @@ public class UserDaoImpl implements UserDao {
         PreparedStatement statement = connection.prepareStatement("SELECT id FROM enum_role WHERE role=?");
         statement.setString(1, user.getRole().toString());
         ResultSet resultSet = statement.executeQuery();
+        log.debug("a database access occurred");
         resultSet.next();
         Long idRole = resultSet.getLong(1);
         return idRole;
@@ -49,6 +50,7 @@ public class UserDaoImpl implements UserDao {
     @Override
     public boolean create(User user) {
         try (Connection connection = ConnectionContext.getConnection()) {
+            log.debug("a database access occurred");
             if (findByEmail(user.getEmail()) == null) {
                 PreparedStatement statement = connection.prepareStatement(
                         "INSERT INTO public.user (first_name, last_name, email, password, id_enum_role) " +
@@ -59,10 +61,11 @@ public class UserDaoImpl implements UserDao {
                 statement.setString(PARAMETER_INDEX_4, user.getPassword());
                 statement.setLong(PARAMETER_INDEX_5, getIdRole(user, connection));
                 statement.executeUpdate();
+                log.debug("a database access occurred");
                 return true;
             } else return false;
         } catch (SQLException e) {
-            e.printStackTrace();
+            log.error(e.getMessage());
         }
         throw new RuntimeException();
     }
@@ -73,10 +76,11 @@ public class UserDaoImpl implements UserDao {
             PreparedStatement statement = connection.prepareStatement("SELECT u.id, u.first_name, u.last_name, u.email, u.password, e.role FROM public.user AS u JOIN public.enum_role AS e ON u.id_enum_role=e.id WHERE u.id=?");
             statement.setLong(PARAMETER_INDEX_1, id);
             ResultSet resultSet = statement.executeQuery();
+            log.debug("a database access occurred");
             if (resultSet.next()) return getUserFromResulSet(resultSet);
             else return null;
         } catch (SQLException e) {
-            e.printStackTrace();
+            log.error(e.getMessage());
         }
         throw new RuntimeException();
     }
@@ -87,13 +91,14 @@ public class UserDaoImpl implements UserDao {
         try (Connection connection = ConnectionContext.getConnection()) {
             Statement statement = connection.createStatement();
             ResultSet resultSet = statement.executeQuery("SELECT u.id, u.first_name, u.last_name, u.email, u.password, e.role FROM public.user AS u JOIN public.enum_role AS e ON u.id_enum_role=e.id ORDER BY u.id");
+            log.debug("a database access occurred");
             List<User> list = new ArrayList<>();
             while (resultSet.next()) {
                 list.add(getUserFromResulSet(resultSet));
             }
             return list;
         } catch (SQLException e) {
-            e.printStackTrace();
+            log.error(e.getMessage());
         }
         throw new RuntimeException();
     }
@@ -101,6 +106,7 @@ public class UserDaoImpl implements UserDao {
     @Override
     public boolean update(User user) {
         try (Connection connection = ConnectionContext.getConnection()) {
+            log.debug("a database access occurred");
             if (findById(user.getId()) != null) {
                 PreparedStatement statement = connection.prepareStatement("UPDATE public.user SET first_name=?, last_name=?, email=?, password=?, id_enum_role=? WHERE id=?");
                 statement.setString(PARAMETER_INDEX_1, user.getFirstName());
@@ -110,10 +116,11 @@ public class UserDaoImpl implements UserDao {
                 statement.setLong(PARAMETER_INDEX_5, getIdRole(user, connection));
                 statement.setLong(PARAMETER_INDEX_6, user.getId());
                 statement.executeUpdate();
+                log.debug("a database access occurred");
                 return true;
             } else return false;
         } catch (SQLException e) {
-
+            log.error(e.getMessage());
         }
         throw new RuntimeException();
     }
@@ -121,14 +128,16 @@ public class UserDaoImpl implements UserDao {
     @Override
     public boolean delete(User user) {
         try (Connection connection = ConnectionContext.getConnection()) {
+            log.debug("a database access occurred");
             if (findById(user.getId()) != null) {
                 PreparedStatement statement = connection.prepareStatement("DELETE FROM public.user WHERE id=?");
                 statement.setLong(PARAMETER_INDEX_1, user.getId());
                 statement.executeUpdate();
+                log.debug("a database access occurred");
                 return true;
             } else return false;
         } catch (SQLException e) {
-
+            log.error(e.getMessage());
         }
         throw new RuntimeException();
     }
@@ -139,10 +148,11 @@ public class UserDaoImpl implements UserDao {
             PreparedStatement statement = connection.prepareStatement("SELECT u.id, u.first_name, u.last_name, u.email, u.password, e.role FROM public.user AS u JOIN public.enum_role AS e ON u.id_enum_role=e.id WHERE u.email=?");
             statement.setString(PARAMETER_INDEX_1, email);
             ResultSet resultSet = statement.executeQuery();
+            log.debug("a database access occurred");
             if (resultSet.next()) return getUserFromResulSet(resultSet);
             else return null;
         } catch (SQLException e) {
-            e.printStackTrace();
+            log.error(e.getMessage());
         }
         throw new RuntimeException();
     }
@@ -154,12 +164,13 @@ public class UserDaoImpl implements UserDao {
             PreparedStatement statement = connection.prepareStatement("SELECT u.id, u.first_name, u.last_name, u.email, u.password, e.role FROM public.user AS u JOIN public.enum_role AS e ON u.id_enum_role=e.id WHERE u.last_name=?");
             statement.setString(PARAMETER_INDEX_1, lastName);
             ResultSet resultSet = statement.executeQuery();
+            log.debug("a database access occurred");
             while (resultSet.next()) {
                 list.add(getUserFromResulSet(resultSet));
             }
             return list;
         } catch (SQLException e) {
-            e.printStackTrace();
+            log.error(e.getMessage());
         }
         throw new RuntimeException();
     }
@@ -169,10 +180,11 @@ public class UserDaoImpl implements UserDao {
         try (Connection connection = ConnectionContext.getConnection()) {
             Statement statement = connection.createStatement();
             ResultSet resultSet = statement.executeQuery("SELECT COUNT(*) FROM public.user");
+            log.debug("a database access occurred");
             resultSet.next();
             return resultSet.getLong(COLUMN_INDEX_1);
         } catch (SQLException e) {
-
+            log.error(e.getMessage());
         }
         throw new RuntimeException();
     }

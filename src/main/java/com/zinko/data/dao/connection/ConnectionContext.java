@@ -23,19 +23,29 @@ public class ConnectionContext {
     public static final String ELEPHANT_USER = "tsojyrly";
     public static final String  ELEPHANT_PASSWORD = "ib1fM1-UprYuJxNAKvpQNdMwfEb8Z7qn";
 
-    public static final Connection getConnection() throws SQLException {
-        log.info("Connect to local DB");
-        return DriverManager.getConnection(POSTGRES_URL, POSTGRES_USER, POSTGRES_PASSWORD);
+    public static final Connection getConnection(){
+        try {
+            log.info("Connect to local DB");
+            return DriverManager.getConnection(POSTGRES_URL, POSTGRES_USER, POSTGRES_PASSWORD);
 //        log.info("Connect to remote DB");
 //        return DriverManager.getConnection(ELEPHANT_URL, ELEPHANT_USER, ELEPHANT_PASSWORD);
+        }
+        catch (SQLException e) {
+            log.error("database not found (invalid url or user or password)");
+        }
+        throw new RuntimeException();
     }
 
-    public static void InitDb() throws IOException {
+    public static void InitDb() {
         File folder = new File(PATH_TO_SQL_SCRIPTS);
         File[] files = folder.listFiles();
         for (File file : files) {
             if (file.isFile()) {
-                executeScript(PATH_TO_SQL_SCRIPTS + "/" + file.getName());
+                try {
+                    executeScript(PATH_TO_SQL_SCRIPTS + "/" + file.getName());
+                } catch (IOException e) {
+                    log.error("not found scripts");
+                }
             }
         }
     }

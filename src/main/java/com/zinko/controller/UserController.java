@@ -10,7 +10,7 @@ import java.io.IOException;
 import java.util.Scanner;
 
 public class UserController {
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) {
         ConnectionContext.InitDb();
         UserService userService = new UserServiceImpl();
         Scanner scanner = new Scanner(System.in);
@@ -80,7 +80,16 @@ public class UserController {
                         User user = userService.createUser(id, firstName, lastName, email, password, role);
                         if(userService.update(user)) System.out.println(userService.findById(id) + " is updated");
                     } else System.out.println("User with id = " + id + " not found");
-
+                }
+                case "login" -> {
+                    System.out.println("Enter email: ");
+                    String email = scanner.nextLine();
+                    System.out.println("Enter your password: ");
+                    String password = scanner.nextLine();
+                    UserDto userDto = userService.login(email, password);
+                    if(userDto!=null)
+                        System.out.println(userDto.getFirstName() + " " + userDto.getLastName());
+                    else System.out.println("authentication error, incorrect password or email");
                 }
                 case "exit" -> execution = false;
             }

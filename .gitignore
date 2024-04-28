@@ -8,8 +8,8 @@
 # IntelliJ
 out/
 target/
+.idea/
+*.iml
 #Files created when code is executed
 *.class
 *.log
-# Directory-based project format:
-.idea/

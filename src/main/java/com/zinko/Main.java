@@ -16,11 +16,11 @@ import java.util.Scanner;
 public class Main {
     static BookServiceImpl bookServiceImpl = new BookServiceImpl();
 
-    public static final String PATH_TO_SQL_SCRIPTS = "./src/main/resource/sql";
+
 
     public static void main(String[] args) throws IOException {
 
-        InitDb();
+        ConnectionContext.InitDb();
         Scanner scanner = new Scanner(System.in);
         boolean execution = true;
         System.out.println("""
@@ -57,30 +57,6 @@ public class Main {
                 }
                 case "exit" -> execution = false;
             }
-        }
-    }
-
-    private static void InitDb() throws IOException {
-        File folder = new File(PATH_TO_SQL_SCRIPTS);
-        File[] files = folder.listFiles();
-        for (File file : files) {
-            if (file.isFile()) {
-                executeScript(PATH_TO_SQL_SCRIPTS + "/" + file.getName());
-            }
-        }
-    }
-
-    private static void executeScript(String path) throws IOException {
-        String script = new String(Files.readAllBytes(Paths.get(path)));
-        try (Connection connection = ConnectionContext.getConnection()) {
-            Statement statement = connection.createStatement();
-            for (String command : script.split(";")) {
-                if (!command.trim().isEmpty()) {
-                    statement.executeUpdate(command + ";");
-                }
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
         }
     }
 }

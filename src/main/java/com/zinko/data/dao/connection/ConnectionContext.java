@@ -1,6 +1,5 @@
 package com.zinko.data.dao.connection;
 
-import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -15,7 +14,7 @@ import java.sql.Statement;
 
 public class ConnectionContext {
     private static final Logger log = LogManager.getLogger(ConnectionContext.class);
-    public static final String PATH_TO_SQL_SCRIPTS = "./src/main/resource/sql";
+    public static final String PATH_TO_SQL_SCRIPTS = "./src/main/resources/sql";
     public static final String POSTGRES_URL = "jdbc:postgresql://localhost:5432/bookstore_bh";
     public static final String POSTGRES_USER = "postgres";
     public static final String POSTGRES_PASSWORD = "root";

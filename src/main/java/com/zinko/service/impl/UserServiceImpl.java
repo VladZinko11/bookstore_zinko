@@ -19,7 +19,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDto createUserDtoFromUser(User user) {
-        log.debug("service method createUserFromUser call");
+        log.debug("service method createUserDtoFromUser call");
         if (user != null) {
             UserDto userDto = new UserDto();
             userDto.setFirstName(user.getFirstName());

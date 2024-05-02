@@ -1,7 +1,6 @@
 package com.zinko.data.dao.connection;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import lombok.extern.log4j.Log4j2;
 
 import java.io.File;
 import java.io.IOException;
@@ -12,8 +11,8 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
 
+@Log4j2
 public class ConnectionContext {
-    private static final Logger log = LogManager.getLogger(ConnectionContext.class);
     public static final String PATH_TO_SQL_SCRIPTS = "./src/main/resources/sql";
     public static final String POSTGRES_URL = "jdbc:postgresql://localhost:5432/bookstore_bh";
     public static final String POSTGRES_USER = "postgres";

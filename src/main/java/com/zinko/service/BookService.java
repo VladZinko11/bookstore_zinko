@@ -2,7 +2,6 @@ package com.zinko.service;
 
 import com.zinko.service.dto.BookDto;
 
-import java.time.LocalDate;
 import java.util.List;
 
 public interface BookService {
@@ -11,11 +10,11 @@ public interface BookService {
 
     List<BookDto> findAll();
 
-    BookDto create(String author, String title, String isbn, int year);
+    BookDto create(BookDto bookDto);
 
-    boolean update(String author, String title, String isbn, LocalDate publicationDate);
+    BookDto update(BookDto bookDto);
 
-    boolean delete(Long id);
+    void delete(Long id);
 
 
 

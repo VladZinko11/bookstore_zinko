@@ -1,0 +1,24 @@
+.table_list {
+    display: table;
+    width: 60%;
+    margin-left: 20%;
+    margin-top: 50px;;
+    }
+.table_list_row {
+    display: table-row;
+    text-decoration: none;
+    transition: all 1s ease;
+}
+a.table_list_row:active,
+a.table_list_row:visited {
+    text-decoration: none;
+    color: #000000;
+}
+a.table_list_row:hover {
+    background-color: lightslategray;
+    color: aliceblue;
+}
+.table_list_cell {
+    display: table-cell;
+    color: black;
+}

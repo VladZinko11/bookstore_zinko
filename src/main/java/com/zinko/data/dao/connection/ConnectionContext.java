@@ -24,12 +24,15 @@ public class ConnectionContext {
     public static final Connection getConnection(){
         try {
             log.info("Connect to local DB");
+            Class.forName("org.postgresql.Driver");
             return DriverManager.getConnection(POSTGRES_URL, POSTGRES_USER, POSTGRES_PASSWORD);
 //        log.info("Connect to remote DB");
 //        return DriverManager.getConnection(ELEPHANT_URL, ELEPHANT_USER, ELEPHANT_PASSWORD);
         }
         catch (SQLException e) {
             log.error("database not found (invalid url or user or password)");
+        } catch (ClassNotFoundException e) {
+            log.error(e.getMessage());
         }
         throw new RuntimeException();
     }

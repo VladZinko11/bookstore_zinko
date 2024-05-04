@@ -10,17 +10,12 @@ public interface UserService {
 
     UserDto findById(Long id);
 
-    boolean create(User user);
+    UserDto create(UserDto userDto);
 
-    boolean update(User user);
+    UserDto update(UserDto userDto);
 
-    boolean delete(Long id);
+    void delete(Long id);
 
     UserDto login(String email, String password);
-
-    User createUser(Long id, String firstName, String lsatName, String email, String password, String role);
-
-    UserDto createUserDtoFromUser(User user);
-
 
 }

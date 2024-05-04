@@ -3,11 +3,13 @@ package com.zinko.data.dao.impl;
 import com.zinko.data.dao.entity.Book;
 import com.zinko.data.dao.BookDao;
 import com.zinko.data.dao.connection.ConnectionContext;
+import lombok.extern.log4j.Log4j2;
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
+@Log4j2
 public class BookDaoImpl implements BookDao {
     public static final String SELECT_COUNT = "SELECT COUNT(*) FROM book";
     public static final String SELECT_ALL_BY_AUTHOR = "SELECT id, author, title, isbn, publication_date FROM book WHERE author=?";
@@ -40,18 +42,20 @@ public class BookDaoImpl implements BookDao {
     }
 
     @Override
-    public void creatBook(Book book) {
+    public Book creatBook(Book book) {
         try (Connection connection = ConnectionContext.getConnection()) {
-            PreparedStatement statement = connection.prepareStatement(INSERT);
-            statement.setString(PARAMETER_INDEX_1, book.getAuthor());
-            statement.setString(PARAMETER_INDEX_2, book.getTitle());
-            statement.setString(PARAMETER_INDEX_3, book.getIsbn());
-            statement.setDate(PARAMETER_INDEX_4, Date.valueOf(book.getPublicationDate()));
-            statement.executeUpdate();
+            if (findBookByIsbn(book.getIsbn()) == null) {
+                PreparedStatement statement = connection.prepareStatement(INSERT);
+                statement.setString(PARAMETER_INDEX_1, book.getAuthor());
+                statement.setString(PARAMETER_INDEX_2, book.getTitle());
+                statement.setString(PARAMETER_INDEX_3, book.getIsbn());
+                statement.setDate(PARAMETER_INDEX_4, Date.valueOf(book.getPublicationDate()));
+                statement.executeUpdate();
+                return findBookByIsbn(book.getIsbn());
+            } else return null;
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
-
     }
 
     @Override
@@ -64,9 +68,8 @@ public class BookDaoImpl implements BookDao {
                 return creatAndInitBookFromResultSet(resultSet);
             else return null;
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
-        throw new RuntimeException();
     }
 
     @Override
@@ -80,9 +83,8 @@ public class BookDaoImpl implements BookDao {
             }
             return list;
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
-        throw new RuntimeException();
     }
 
     @Override
@@ -95,46 +97,41 @@ public class BookDaoImpl implements BookDao {
                 return creatAndInitBookFromResultSet(resultSet);
             else return null;
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
-        throw new RuntimeException();
     }
 
     @Override
-    public boolean updateBook(Book book) {
-        Book book1 = findBookByIsbn(book.getIsbn());
-        if (book1 != null) {
-            try (Connection connection = ConnectionContext.getConnection()) {
+    public Book updateBook(Book book) {
+        try (Connection connection = ConnectionContext.getConnection()) {
+            Book book1 = findBookByIsbn(book.getIsbn());
+            if (book1 != null) {
                 PreparedStatement statement1 = connection.prepareStatement(UPDATE);
                 statement1.setString(PARAMETER_INDEX_1, book.getAuthor());
                 statement1.setString(PARAMETER_INDEX_2, book.getTitle());
                 statement1.setDate(PARAMETER_INDEX_3, Date.valueOf(book.getPublicationDate()));
                 statement1.setString(PARAMETER_INDEX_4, book.getIsbn());
                 statement1.executeUpdate();
-                return true;
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-        } else return false;
-        throw new RuntimeException();
+                return findBookByIsbn(book.getIsbn());
+            } else return null;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
     public boolean deleteBook(Long id) {
         try (Connection connection = ConnectionContext.getConnection()) {
-            PreparedStatement statement = connection.prepareStatement(SELECT_BY_ID);
-            statement.setLong(PARAMETER_INDEX_1, id);
-            ResultSet resultSet = statement.executeQuery();
-            if (resultSet.next()) {
+            Book book = findBookById(id);
+            if (book != null) {
                 PreparedStatement statement1 = connection.prepareStatement(DELETE);
                 statement1.setLong(PARAMETER_INDEX_1, id);
                 statement1.executeUpdate();
                 return true;
             } else return false;
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
-        throw new RuntimeException();
     }
 
     @Override
@@ -149,9 +146,8 @@ public class BookDaoImpl implements BookDao {
             }
             return list;
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
-        throw new RuntimeException();
     }
 
     @Override
@@ -159,26 +155,9 @@ public class BookDaoImpl implements BookDao {
         try (Connection connection = ConnectionContext.getConnection()) {
             Statement statement = connection.createStatement();
             ResultSet resultSet = statement.executeQuery(SELECT_COUNT);
-            resultSet.next();
-            return resultSet.getLong(1);
+            return resultSet.getLong(COLUMN_INDEX_1);
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
-        throw new RuntimeException();
-    }
-
-    @Override
-    public void updateRS(Book book) {
-
-    }
-
-    @Override
-    public void createRs(Book book) {
-
-    }
-
-    @Override
-    public void printTableInfo() {
-
     }
 }

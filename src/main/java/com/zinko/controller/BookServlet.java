@@ -17,8 +17,14 @@ public class BookServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         Long id = Long.valueOf(req.getParameter("id"));
-        BookDto bookDto = bookService.findById(id);
+        try{
+            BookDto bookDto = bookService.findById(id);
         req.setAttribute("book", bookDto);
         req.getRequestDispatcher("jsp/book.jsp").forward(req, resp);
+    }catch (RuntimeException e) {
+            resp.setStatus(404);
+            req.setAttribute("message", e.getMessage());
+            req.getRequestDispatcher("jsp/exception.jsp").forward(req, resp);
+        }
     }
 }

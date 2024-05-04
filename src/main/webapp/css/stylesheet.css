@@ -67,3 +67,13 @@ a.table_list_row:hover {
     padding: 14px 16px;
     text-decoration: none;
 }
+
+.error {
+    display: grid;
+    text-align: center;
+    width: 60%;
+    margin-left: 20%;
+}
+.error_status {
+    font-size: 200px;
+}

@@ -52,7 +52,7 @@ public class UserServiceImpl implements UserService {
         User user = userDao.findById(id);
         if (user != null)
             return createUserDtoFromUser(user);
-        else throw new RuntimeException("User with id" + id + " not exist");
+        else throw new RuntimeException("User with id: " + id + " not exist");
     }
 
     @Override
@@ -60,7 +60,7 @@ public class UserServiceImpl implements UserService {
         log.debug("service method create call");
         User user = userDao.create(createUserFromUserDto(userDto));
         if (user != null) return createUserDtoFromUser(user);
-        else throw new RuntimeException("User with email" + user.getEmail() + " is exist");
+        else throw new RuntimeException("User with email: " + user.getEmail() + " is exist");
     }
 
     @Override
@@ -90,7 +90,7 @@ public class UserServiceImpl implements UserService {
     public UserDto login(String email, String password) {
         log.debug("service method login call");
         User user = userDao.findByEmail(email);
-        if (user == null) throw new RuntimeException("Not found user with email " + email);
+        if (user == null) throw new RuntimeException("Not found user with email: " + email);
         if (!user.getPassword().equals(password)) throw new RuntimeException("Wrong password");
         else return createUserDtoFromUser(user);
     }

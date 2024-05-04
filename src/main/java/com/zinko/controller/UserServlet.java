@@ -27,8 +27,9 @@ public class UserServlet extends HttpServlet {
             req.getRequestDispatcher("jsp/user.jsp").forward(req, resp);
         }
         catch (RuntimeException e) {
+            resp.setStatus(404);
             req.setAttribute("message", e.getMessage());
-            req.getRequestDispatcher("jsp/exception.jsp");
+            req.getRequestDispatcher("jsp/exception.jsp").forward(req, resp);
         }
     }
 }

@@ -12,7 +12,6 @@
     <title>Title</title>
 </head>
 <body>
-    <a href="users" methods="get" content="${pageContext.request.contextPath}">users</a><br/>
-    <a href="books" methods="get" content="${pageContext.request.contextPath}">books</a><br/>
+
 </body>
 </html>

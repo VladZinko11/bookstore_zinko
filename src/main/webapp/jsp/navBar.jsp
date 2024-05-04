@@ -8,9 +8,14 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
+    <link rel="stylesheet" href="css/stylesheet.css">
     <title>Title</title>
 </head>
 <body>
-  <a href="index.jsp"> main page </a> <br/>
+<div class="nav-bar">
+    <a href="index.jsp" class="nav-bar-a"> main page </a>
+    <a href="users" methods="get" class="nav-bar-a" >users</a>
+    <a href="books" methods="get" class="nav-bar-a" >books</a>
+</div>
 </body>
 </html>

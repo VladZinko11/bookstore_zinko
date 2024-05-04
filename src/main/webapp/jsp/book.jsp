@@ -7,18 +7,18 @@
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@include file="navBar.jsp"%>
 <html>
 <head>
+    <link rel="stylesheet" href="css/stylesheet.css">
     <title>Title</title>
 </head>
 <body>
-
-<h1>
-    <c:out value="${book.id}"></c:out>
-    <c:out value="${book.author}"></c:out>
-    <c:out value="${book.title}"></c:out>
-    <c:out value="${book.isbn}"></c:out>
-    <c:out value="${book.publicationDate.getYear()}"></c:out>
-</h1>
+    <div class="book">
+        <div class="book_name"><c:out value="${book.author}"></c:out></div>
+        <div class="book_name"><c:out value="${book.title}"></c:out></div>
+        <div class="book_isbn "><c:out value="${book.isbn}"></c:out></div>
+        <div class="book_date"><c:out value="${book.publicationDate.getYear()}"></c:out></div>
+    </div>
 </body>
 </html>

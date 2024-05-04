@@ -7,18 +7,19 @@
   To change this template use File | Settings | File Templates.
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@include file="navBar.jsp"%>
+<%@include file="navBar.jsp" %>
 <html>
 <head>
+    <link rel="stylesheet" href="css/stylesheet.css">
     <title>Title</title>
 </head>
 <body>
-<h1>
-    <c:out value="${user.id}"></c:out>
-    <c:out value="${user.firstName}"></c:out>
-    <c:out value="${user.lastName}"></c:out>
-    <c:out value="${user.email}"></c:out>
-    <c:out value="${user.role.toString()}"></c:out>
-</h1>
+
+<div class="user">
+    <div class="user_name"><c:out value="${user.firstName}"></c:out>
+        <c:out value="${user.lastName}"></c:out></div>
+    <div class="user_id">id = <c:out value="${user.id}"></c:out></div>
+    <div class="user_email"><c:out value="${user.email}"></c:out></div>
+</div>
 </body>
 </html>

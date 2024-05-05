@@ -4,12 +4,13 @@ import com.zinko.data.dao.entity.Book;
 import com.zinko.data.dao.BookDao;
 import com.zinko.data.dao.connection.ConnectionContext;
 import lombok.extern.log4j.Log4j2;
+import lombok.extern.slf4j.Slf4j;
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-@Log4j2
+@Slf4j
 public class BookDaoImpl implements BookDao {
     public static final String SELECT_COUNT = "SELECT COUNT(*) FROM book";
     public static final String SELECT_ALL_BY_AUTHOR = "SELECT id, author, title, isbn, publication_date FROM book WHERE author=?";

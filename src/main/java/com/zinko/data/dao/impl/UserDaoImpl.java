@@ -5,6 +5,7 @@ import com.zinko.data.dao.connection.ConnectionContext;
 import com.zinko.data.dao.entity.User;
 import com.zinko.data.dao.entity.enums.Role;
 import lombok.extern.log4j.Log4j2;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -12,7 +13,7 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-@Log4j2
+@Slf4j
 public class UserDaoImpl implements UserDao {
     public static final int PARAMETER_INDEX_1 = 1;
     public static final int PARAMETER_INDEX_2 = 2;

@@ -5,18 +5,16 @@ import com.zinko.data.dao.entity.User;
 import com.zinko.data.dao.impl.UserDaoImpl;
 import com.zinko.service.UserService;
 import com.zinko.service.dto.UserDto;
-import lombok.extern.log4j.Log4j2;
+import lombok.extern.slf4j.Slf4j;
 
-import java.util.ArrayList;
 import java.util.List;
 
-@Log4j2
+@Slf4j
 public class UserServiceImpl implements UserService {
 
     private final UserDao userDao = new UserDaoImpl();
 
-    public UserDto createUserDtoFromUser(User user) {
-        log.debug("service method createUserDtoFromUser call");
+    private UserDto toDto(User user) {
         if (user != null) {
             UserDto userDto = new UserDto();
             userDto.setId(user.getId());
@@ -29,8 +27,7 @@ public class UserServiceImpl implements UserService {
         } else return null;
     }
 
-    public User createUserFromUserDto(UserDto userDto) {
-        log.debug("service method createUser call");
+    private User toUser(UserDto userDto) {
         User user = new User();
         user.setId(userDto.getId());
         user.setFirstName(userDto.getFirstName());
@@ -42,56 +39,56 @@ public class UserServiceImpl implements UserService {
     }
 
     public List<UserDto> findAll() {
-        log.debug("service method findAll call");
-        return userDao.findAll().stream().map(this::createUserDtoFromUser).toList();
+        log.debug("UserService method findAll call");
+        return userDao.findAll().stream().map(this::toDto).toList();
     }
 
     @Override
     public UserDto findById(Long id) {
-        log.debug("service method findById call");
+        log.debug("UserService method findById call with id: ");
         User user = userDao.findById(id);
         if (user != null)
-            return createUserDtoFromUser(user);
+            return toDto(user);
         else throw new RuntimeException("User with id: " + id + " not exist");
     }
 
     @Override
     public UserDto create(UserDto userDto) {
-        log.debug("service method create call");
-        User user = userDao.create(createUserFromUserDto(userDto));
-        if (user != null) return createUserDtoFromUser(user);
+        log.debug("UserService method create call " + userDto);
+        User user = userDao.create(toUser(userDto));
+        if (user != null) return toDto(user);
         else throw new RuntimeException("User with email: " + user.getEmail() + " is exist");
     }
 
     @Override
-    public UserDto update(UserDto user) {
-        log.debug("service method update call");
-        User userBefore = createUserFromUserDto(findById(user.getId()));
-        if (user.getFirstName() == null)
-            user.setFirstName(userBefore.getFirstName());
-        if (user.getLastName() == null)
-            user.setLastName(userBefore.getLastName());
-        if (user.getEmail() == null)
-            user.setEmail(userBefore.getEmail());
-        if (user.getPassword() == null)
-            user.setPassword(userBefore.getPassword());
-        if (user.getRole() == null)
-            user.setRole(userBefore.getRole());
-        User newUser = userDao.update(createUserFromUserDto(user));
-        return createUserDtoFromUser(newUser);
+    public UserDto update(UserDto userDto) {
+        log.debug("UserService method update call " + userDto);
+        User userBefore = toUser(findById(userDto.getId()));
+        if (userDto.getFirstName() == null)
+            userDto.setFirstName(userBefore.getFirstName());
+        if (userDto.getLastName() == null)
+            userDto.setLastName(userBefore.getLastName());
+        if (userDto.getEmail() == null)
+            userDto.setEmail(userBefore.getEmail());
+        if (userDto.getPassword() == null)
+            userDto.setPassword(userBefore.getPassword());
+        if (userDto.getRole() == null)
+            userDto.setRole(userBefore.getRole());
+        User newUser = userDao.update(toUser(userDto));
+        return toDto(newUser);
     }
 
     public void delete(Long id) {
-        log.debug("service method delete call");
-        userDao.delete(userDao.findById(id));
+        log.debug("UserService method delete call with id: " + id);
+        userDao.delete(toUser(findById(id)));
     }
 
     @Override
     public UserDto login(String email, String password) {
-        log.debug("service method login call");
+        log.debug(String.format("UserService method login call with email %s and password %s", email, password));
         User user = userDao.findByEmail(email);
         if (user == null) throw new RuntimeException("Not found user with email: " + email);
         if (!user.getPassword().equals(password)) throw new RuntimeException("Wrong password");
-        else return createUserDtoFromUser(user);
+        else return toDto(user);
     }
 }

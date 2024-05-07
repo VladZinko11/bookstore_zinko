@@ -1,7 +1,9 @@
 package com.zinko.conf;
 
 import com.zinko.controller.commands.Command;
+import com.zinko.controller.commands.impl.BookCommand;
 import com.zinko.controller.commands.impl.BooksCommand;
+import com.zinko.controller.commands.impl.UserCommand;
 import com.zinko.controller.commands.impl.UsersCommand;
 import com.zinko.data.dao.BookDao;
 import com.zinko.data.dao.UserDao;
@@ -58,6 +60,8 @@ public class CommandFactory {
 
         commands.put("books", new BooksCommand(bookService));
         commands.put("users", new UsersCommand(userService));
+        commands.put("book", new BookCommand(bookService));
+        commands.put("user", new UserCommand(userService));
 
     }
 

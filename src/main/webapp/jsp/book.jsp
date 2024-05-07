@@ -6,7 +6,6 @@
   To change this template use File | Settings | File Templates.
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@include file="navBar.jsp"%>
 <html>
 <head>
@@ -15,10 +14,10 @@
 </head>
 <body>
     <div class="book">
-        <div class="book_name"><c:out value="${book.author}"></c:out></div>
-        <div class="book_name"><c:out value="${book.title}"></c:out></div>
-        <div class="book_isbn "><c:out value="${book.isbn}"></c:out></div>
-        <div class="book_date"><c:out value="${book.publicationDate.getYear()}"></c:out></div>
+        <div class="book_name">${book.author}</div>
+        <div class="book_name">${book.title}</div>
+        <div class="book_isbn ">${book.isbn}</div>
+        <div class="book_date">${book.publicationDate.getYear()}</div>
     </div>
 </body>
 </html>

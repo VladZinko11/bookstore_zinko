@@ -1,3 +1,4 @@
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%--
   Created by IntelliJ IDEA.
   User: Vlad
@@ -6,7 +7,6 @@
   To change this template use File | Settings | File Templates.
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@include file="navBar.jsp"%>
 <html>
 <head>
@@ -17,12 +17,12 @@
 
 <div class="table_list">
 <c:forEach var="book" items="${books}">
-    <a href="book?id=${book.id}" methods="get" class="table_list_row">
-        <div class="table_list_cell"><c:out value="${book.id}" ></c:out></div>
-        <div class="table_list_cell"><c:out value="${book.author}" ></c:out></div>
-        <div class="table_list_cell"><c:out value="${book.title}" ></c:out></div>
-        <div class="table_list_cell"><c:out value="${book.isbn}" ></c:out></div>
-        <div class="table_list_cell"><c:out value="${book.publicationDate.getYear()}"></c:out></div>
+    <a href="/controller?command=book&&id=${book.id}" methods="get" class="table_list_row">
+        <div class="table_list_cell">${book.id}</div>
+        <div class="table_list_cell">${book.author}</div>
+        <div class="table_list_cell">${book.title}</div>
+        <div class="table_list_cell">${book.isbn}</div>
+        <div class="table_list_cell">${book.publicationDate.getYear()}</div>
     </a><br/>
 </c:forEach>
 </div>

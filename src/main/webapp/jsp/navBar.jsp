@@ -14,8 +14,8 @@
 <body>
 <div class="nav-bar">
     <a href="index.jsp" class="nav-bar-a"> main page </a>
-    <a href="users" methods="get" class="nav-bar-a" >users</a>
-    <a href="books" methods="get" class="nav-bar-a" >books</a>
+    <a href="/controller?command=users" methods="get" class="nav-bar-a" >users</a>
+    <a href="/controller?command=books" methods="get" class="nav-bar-a" >books</a>
 </div>
 </body>
 </html>

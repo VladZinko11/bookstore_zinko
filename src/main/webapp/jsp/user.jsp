@@ -1,4 +1,3 @@
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%--
   Created by IntelliJ IDEA.
   User: Vlad
@@ -16,10 +15,9 @@
 <body>
 
 <div class="user">
-    <div class="user_name"><c:out value="${user.firstName}"></c:out>
-        <c:out value="${user.lastName}"></c:out></div>
-    <div class="user_id">id = <c:out value="${user.id}"></c:out></div>
-    <div class="user_email"><c:out value="${user.email}"></c:out></div>
+    <div class="user_name">${user.firstName} ${user.lastName}</div>
+    <div class="user_id">id = ${user.id}</div>
+    <div class="user_email">${user.email}</div>
 </div>
 </body>
 </html>

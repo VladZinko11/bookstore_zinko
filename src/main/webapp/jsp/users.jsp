@@ -1,3 +1,4 @@
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%--
   Created by IntelliJ IDEA.
   User: Vlad
@@ -6,7 +7,6 @@
   To change this template use File | Settings | File Templates.
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@include file="navBar.jsp" %>
 
 <html>
@@ -18,12 +18,12 @@
 
 <div class="table_list">
     <c:forEach var="user" items="${users}">
-        <a href="user?id=${user.id}" methods="get" class="table_list_row">
-            <div class="table_list_cell"><c:out value="${user.id}"></c:out></div>
-            <div class="table_list_cell"><c:out value="${user.firstName}"></c:out></div>
-            <div class="table_list_cell"><c:out value="${user.lastName}"></c:out></div>
-            <div class="table_list_cell"><c:out value="${user.email}"></c:out></div>
-            <div class="table_list_cell"><c:out value="${user.role.toString()}"></c:out></div>
+        <a href="/controller?command=user&&id=${user.id}" methods="get" class="table_list_row">
+            <div class="table_list_cell">${user.id}</div>
+            <div class="table_list_cell">${user.firstName}</div>
+            <div class="table_list_cell">${user.lastName}</div>
+            <div class="table_list_cell">${user.email}</div>
+            <div class="table_list_cell">${user.role.toString()}</div>
         </a><br/>
     </c:forEach>
 </div>

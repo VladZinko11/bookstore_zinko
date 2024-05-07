@@ -1,17 +1,18 @@
 package com.zinko.service.impl;
 
 import com.zinko.data.dao.BookDao;
-import com.zinko.data.dao.impl.BookDaoImpl;
 import com.zinko.data.dao.entity.Book;
 import com.zinko.service.BookService;
 import com.zinko.service.dto.BookDto;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.List;
 
 @Slf4j
+@RequiredArgsConstructor
 public class BookServiceImpl implements BookService {
-    final BookDao bookDao = new BookDaoImpl();
+    final BookDao bookDao;
 
     public BookDto toDto(Book book) {
         BookDto bookDto = new BookDto();
@@ -35,7 +36,7 @@ public class BookServiceImpl implements BookService {
 
     @Override
     public BookDto findById(Long id) {
-        log.debug("BookService method findById call with id " + id);
+        log.debug("BookService method findById call with id: {}", id);
         Book book = bookDao.findBookById(id);
         if(book!=null) return toDto(bookDao.findBookById(id));
         else throw new RuntimeException("Not found book with id: " + id);
@@ -49,7 +50,7 @@ public class BookServiceImpl implements BookService {
 
     @Override
     public BookDto create(BookDto bookDto) {
-        log.debug("BookService method create " + bookDto);
+        log.debug("BookService method create {}", bookDto);
         Book book = bookDao.creatBook(toBook(bookDto));
         if(book!=null) return toDto(book);
         else throw new RuntimeException("Book with isbn: " + bookDto.getIsbn() + " is exist");
@@ -57,7 +58,7 @@ public class BookServiceImpl implements BookService {
 
     @Override
     public BookDto update(BookDto bookDto) {
-        log.debug("BookService method update call " + bookDto);
+        log.debug("BookService method update call {}", bookDto);
         BookDto bookBefore = findById(bookDto.getId());
         if(bookDto.getTitle()==null) bookDto.setTitle(bookBefore.getTitle());
         if(bookDto.getAuthor()==null) bookDto.setAuthor(bookBefore.getAuthor());
@@ -69,7 +70,7 @@ public class BookServiceImpl implements BookService {
 
     @Override
     public void delete(Long id) {
-        log.debug("BookService method delete call with id: ");
+        log.debug("BookService method delete call with id: {}", id);
         if(!bookDao.deleteBook(id)) throw new RuntimeException("Not found book with id: " + id);
     }
 }

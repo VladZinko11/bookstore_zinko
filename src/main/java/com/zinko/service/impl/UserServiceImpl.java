@@ -5,14 +5,16 @@ import com.zinko.data.dao.entity.User;
 import com.zinko.data.dao.impl.UserDaoImpl;
 import com.zinko.service.UserService;
 import com.zinko.service.dto.UserDto;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.List;
 
 @Slf4j
+@RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
 
-    private final UserDao userDao = new UserDaoImpl();
+    private final UserDao userDao;
 
     private UserDto toDto(User user) {
         if (user != null) {
@@ -45,7 +47,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDto findById(Long id) {
-        log.debug("UserService method findById call with id: ");
+        log.debug("UserService method findById call with id: {}", id);
         User user = userDao.findById(id);
         if (user != null)
             return toDto(user);
@@ -54,7 +56,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDto create(UserDto userDto) {
-        log.debug("UserService method create call " + userDto);
+        log.debug("UserService method create call {}", userDto);
         User user = userDao.create(toUser(userDto));
         if (user != null) return toDto(user);
         else throw new RuntimeException("User with email: " + user.getEmail() + " is exist");
@@ -62,7 +64,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDto update(UserDto userDto) {
-        log.debug("UserService method update call " + userDto);
+        log.debug("UserService method update call {}", userDto);
         User userBefore = toUser(findById(userDto.getId()));
         if (userDto.getFirstName() == null)
             userDto.setFirstName(userBefore.getFirstName());
@@ -79,13 +81,13 @@ public class UserServiceImpl implements UserService {
     }
 
     public void delete(Long id) {
-        log.debug("UserService method delete call with id: " + id);
+        log.debug("UserService method delete call with id: {}", id);
         userDao.delete(toUser(findById(id)));
     }
 
     @Override
     public UserDto login(String email, String password) {
-        log.debug(String.format("UserService method login call with email %s and password %s", email, password));
+        log.debug("UserService method login call with email {} and password {}", email, password);
         User user = userDao.findByEmail(email);
         if (user == null) throw new RuntimeException("Not found user with email: " + email);
         if (!user.getPassword().equals(password)) throw new RuntimeException("Wrong password");

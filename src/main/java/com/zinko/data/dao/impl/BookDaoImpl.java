@@ -1,9 +1,9 @@
 package com.zinko.data.dao.impl;
 
+import com.zinko.data.dao.connection.MyConnectionManager;
 import com.zinko.data.dao.entity.Book;
 import com.zinko.data.dao.BookDao;
-import com.zinko.data.dao.connection.ConnectionContext;
-import lombok.extern.log4j.Log4j2;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import java.sql.*;
@@ -11,15 +11,18 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
+@RequiredArgsConstructor
 public class BookDaoImpl implements BookDao {
-    public static final String SELECT_COUNT = "SELECT COUNT(*) FROM book";
-    public static final String SELECT_ALL_BY_AUTHOR = "SELECT id, author, title, isbn, publication_date FROM book WHERE author=?";
-    public static final String DELETE = "DELETE FROM book WHERE id=?";
-    public static final String SELECT_BY_ID = "SELECT id, author, title, isbn, publication_date FROM book WHERE id=?";
-    public static final String INSERT = "INSERT INTO book (author, title, isbn, publication_date) VALUES (?, ?, ?, ?)";
-    public static final String SELECT_ALL = "SELECT id, author, title, isbn, publication_date FROM book";
-    public static final String SELECT_BY_ISBN = "SELECT id, author, title, isbn, publication_date FROM book WHERE isbn=?";
-    public static final String UPDATE = "UPDATE book SET author=?, title=?,publication_date=? WHERE isbn=?";
+    private final MyConnectionManager connectionManager;
+    public static final String SELECT_COUNT = "SELECT COUNT(*) FROM book WHERE deleted=false";
+    public static final String SELECT_ALL_BY_AUTHOR = "SELECT id, author, title, isbn, publication_date FROM book WHERE author=? AND deleted=false";
+    public static final String DELETE = "UPDATE book SET deleted=true WHERE id=?";
+    public static final String SELECT_BY_ID = "SELECT id, author, title, isbn, publication_date FROM book WHERE id=? AND deleted=false";
+
+    public static final String INSERT = "INSERT INTO book (author, title, isbn, publication_date, deleted) VALUES (?, ?, ?, ?, false)";
+    public static final String SELECT_ALL = "SELECT id, author, title, isbn, publication_date FROM book WHERE deleted=false";
+    public static final String SELECT_BY_ISBN = "SELECT id, author, title, isbn, publication_date FROM book WHERE isbn=? AND deleted=false";
+    public static final String UPDATE = "UPDATE book SET author=?, title=?,publication_date=? WHERE isbn=? AND deleted=false";
     public static final int PARAMETER_INDEX_1 = 1;
     public static final int PARAMETER_INDEX_2 = 2;
     public static final int PARAMETER_INDEX_3 = 3;
@@ -44,9 +47,9 @@ public class BookDaoImpl implements BookDao {
 
     @Override
     public Book creatBook(Book book) {
-        try (Connection connection = ConnectionContext.getConnection()) {
+        try (Connection connection = connectionManager.getConnection();
+             PreparedStatement statement = connection.prepareStatement(INSERT)) {
             if (findBookByIsbn(book.getIsbn()) == null) {
-                PreparedStatement statement = connection.prepareStatement(INSERT);
                 statement.setString(PARAMETER_INDEX_1, book.getAuthor());
                 statement.setString(PARAMETER_INDEX_2, book.getTitle());
                 statement.setString(PARAMETER_INDEX_3, book.getIsbn());
@@ -61,12 +64,11 @@ public class BookDaoImpl implements BookDao {
 
     @Override
     public Book findBookById(Long id) {
-        try (Connection connection = ConnectionContext.getConnection()) {
-            PreparedStatement statement = connection.prepareStatement(SELECT_BY_ID);
+        try (Connection connection = connectionManager.getConnection();
+             PreparedStatement statement = connection.prepareStatement(SELECT_BY_ID)) {
             statement.setLong(PARAMETER_INDEX_1, id);
             ResultSet resultSet = statement.executeQuery();
-            if (resultSet.next())
-                return creatAndInitBookFromResultSet(resultSet);
+            if (resultSet.next()) return creatAndInitBookFromResultSet(resultSet);
             else return null;
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -76,8 +78,8 @@ public class BookDaoImpl implements BookDao {
     @Override
     public List<Book> findAllBook() {
         List<Book> list = new ArrayList<>();
-        try (Connection connection = ConnectionContext.getConnection()) {
-            Statement statement = connection.createStatement();
+        try (Connection connection = connectionManager.getConnection();
+             Statement statement = connection.createStatement()) {
             ResultSet resultSet = statement.executeQuery(SELECT_ALL);
             while (resultSet.next()) {
                 list.add(creatAndInitBookFromResultSet(resultSet));
@@ -90,12 +92,11 @@ public class BookDaoImpl implements BookDao {
 
     @Override
     public Book findBookByIsbn(String isbn) {
-        try (Connection connection = ConnectionContext.getConnection()) {
-            PreparedStatement statement = connection.prepareStatement(SELECT_BY_ISBN);
+        try (Connection connection = connectionManager.getConnection();
+             PreparedStatement statement = connection.prepareStatement(SELECT_BY_ISBN)) {
             statement.setString(PARAMETER_INDEX_1, isbn);
             ResultSet resultSet = statement.executeQuery();
-            if (resultSet.next())
-                return creatAndInitBookFromResultSet(resultSet);
+            if (resultSet.next()) return creatAndInitBookFromResultSet(resultSet);
             else return null;
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -104,16 +105,18 @@ public class BookDaoImpl implements BookDao {
 
     @Override
     public Book updateBook(Book book) {
-        try (Connection connection = ConnectionContext.getConnection()) {
+        log.debug("BookDao method updateBook call {}", book);
+        try (Connection connection = connectionManager.getConnection()) {
             Book book1 = findBookByIsbn(book.getIsbn());
             if (book1 != null) {
-                PreparedStatement statement1 = connection.prepareStatement(UPDATE);
-                statement1.setString(PARAMETER_INDEX_1, book.getAuthor());
-                statement1.setString(PARAMETER_INDEX_2, book.getTitle());
-                statement1.setDate(PARAMETER_INDEX_3, Date.valueOf(book.getPublicationDate()));
-                statement1.setString(PARAMETER_INDEX_4, book.getIsbn());
-                statement1.executeUpdate();
-                return findBookByIsbn(book.getIsbn());
+                try (PreparedStatement statement1 = connection.prepareStatement(UPDATE)) {
+                    statement1.setString(PARAMETER_INDEX_1, book.getAuthor());
+                    statement1.setString(PARAMETER_INDEX_2, book.getTitle());
+                    statement1.setDate(PARAMETER_INDEX_3, Date.valueOf(book.getPublicationDate()));
+                    statement1.setString(PARAMETER_INDEX_4, book.getIsbn());
+                    statement1.executeUpdate();
+                    return findBookByIsbn(book.getIsbn());
+                }
             } else return null;
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -122,13 +125,14 @@ public class BookDaoImpl implements BookDao {
 
     @Override
     public boolean deleteBook(Long id) {
-        try (Connection connection = ConnectionContext.getConnection()) {
+        try (Connection connection = connectionManager.getConnection()) {
             Book book = findBookById(id);
             if (book != null) {
-                PreparedStatement statement1 = connection.prepareStatement(DELETE);
-                statement1.setLong(PARAMETER_INDEX_1, id);
-                statement1.executeUpdate();
-                return true;
+                try (PreparedStatement statement1 = connection.prepareStatement(DELETE)) {
+                    statement1.setLong(PARAMETER_INDEX_1, id);
+                    statement1.executeUpdate();
+                    return true;
+                }
             } else return false;
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -138,8 +142,8 @@ public class BookDaoImpl implements BookDao {
     @Override
     public List<Book> findByAuthor(String author) {
         List<Book> list = new ArrayList<>();
-        try (Connection connection = ConnectionContext.getConnection()) {
-            PreparedStatement statement = connection.prepareStatement(SELECT_ALL_BY_AUTHOR);
+        try (Connection connection = connectionManager.getConnection();
+             PreparedStatement statement = connection.prepareStatement(SELECT_ALL_BY_AUTHOR)) {
             statement.setString(PARAMETER_INDEX_1, author);
             ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {
@@ -153,8 +157,8 @@ public class BookDaoImpl implements BookDao {
 
     @Override
     public Long countAll() {
-        try (Connection connection = ConnectionContext.getConnection()) {
-            Statement statement = connection.createStatement();
+        try (Connection connection = connectionManager.getConnection();
+             Statement statement = connection.createStatement()) {
             ResultSet resultSet = statement.executeQuery(SELECT_COUNT);
             return resultSet.getLong(COLUMN_INDEX_1);
         } catch (SQLException e) {

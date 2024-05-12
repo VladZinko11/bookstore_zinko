@@ -27,6 +27,26 @@ public class Controller extends HttpServlet {
     }
 
     @Override
+    protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        String command = req.getParameter("command");
+        Command commandInstance = commandFactory.getCommand(command);
+        log.debug(commandInstance.toString());
+        String page = commandInstance.execute(req);
+        log.debug(page);
+        req.getRequestDispatcher(page).forward(req, resp);
+    }
+
+    @Override
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        String command = req.getParameter("command");
+        Command commandInstance = commandFactory.getCommand(command);
+        log.debug(commandInstance.toString());
+        String page = commandInstance.execute(req);
+        log.debug(page);
+        req.getRequestDispatcher(page).forward(req, resp);
+    }
+
+    @Override
     public void init(ServletConfig config) throws ServletException {
         commandFactory = CommandFactory.getInstance();
     }

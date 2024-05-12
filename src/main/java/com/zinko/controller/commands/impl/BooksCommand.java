@@ -7,9 +7,11 @@ import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 
 import java.util.List;
-@RequiredArgsConstructor
-public class BooksCommand implements Command {
-    private final BookService bookService;
+public class BooksCommand extends AbstractBookCommand {
+
+    public BooksCommand(BookService bookService) {
+        super(bookService);
+    }
 
     @Override
     public String execute(HttpServletRequest req) {

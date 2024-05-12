@@ -1,13 +1,13 @@
 package com.zinko.controller.commands.impl;
 
-import com.zinko.controller.commands.Command;
 import com.zinko.service.BookService;
 import jakarta.servlet.http.HttpServletRequest;
-import lombok.RequiredArgsConstructor;
+public class BookCommand extends AbstractBookCommand {
 
-@RequiredArgsConstructor
-public class BookCommand implements Command {
-    private final BookService bookService;
+    public BookCommand(BookService bookService) {
+        super(bookService);
+    }
+
     @Override
     public String execute(HttpServletRequest req) {
         req.setAttribute("book", bookService.findById(Long.valueOf(req.getParameter("id"))));

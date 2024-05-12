@@ -20,8 +20,7 @@ public class BookEditCommand extends AbstractBookCommand {
         newBookDto.setTitle(req.getParameter("title"));
         newBookDto.setIsbn(req.getParameter("isbn"));
         newBookDto.setPublicationDate(LocalDate.parse(req.getParameter("publication_date")));
-        bookService.update(newBookDto);
-        req.setAttribute("books", bookService.findAll());
-        return "jsp/books.jsp";
+        req.setAttribute("book", bookService.update(newBookDto));
+        return "jsp/book.jsp";
     }
 }

@@ -1,10 +1,7 @@
 package com.zinko.conf;
 
 import com.zinko.controller.commands.Command;
-import com.zinko.controller.commands.impl.BookCommand;
-import com.zinko.controller.commands.impl.BooksCommand;
-import com.zinko.controller.commands.impl.UserCommand;
-import com.zinko.controller.commands.impl.UsersCommand;
+import com.zinko.controller.commands.impl.*;
 import com.zinko.data.dao.BookDao;
 import com.zinko.data.dao.UserDao;
 import com.zinko.data.dao.connection.MyConnectionManager;
@@ -62,6 +59,16 @@ public class CommandFactory {
         commands.put("users", new UsersCommand(userService));
         commands.put("book", new BookCommand(bookService));
         commands.put("user", new UserCommand(userService));
+        commands.put("book_edit_form", new BookEditFormCommand(bookService));
+        commands.put("book_delete", new BookDeleteCommand(bookService));
+        commands.put("book_edit", new BookEditCommand(bookService));
+        commands.put("book_create", new BookCreateCommand(bookService));
+        commands.put("book_create_form", new BookCreateFormCommand(bookService));
+        commands.put("user_edit_form", new UserEditFormCommand(userService));
+        commands.put("user_delete", new UserDeleteCommand(userService));
+        commands.put("user_create_form", new UserCreateFormCommand(userService));
+        commands.put("user_edit", new UserEditCommand(userService));
+        commands.put("user_create", new UserCreateCommand(userService));
 
     }
 

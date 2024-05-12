@@ -24,7 +24,17 @@
             <div class="table_list_cell">${user.lastName}</div>
             <div class="table_list_cell">${user.email}</div>
             <div class="table_list_cell">${user.role.toString()}</div>
-        </a><br/>
+        </a>
+        <form>
+            <input type="hidden" name="command" value="user_edit_form">
+            <input type="hidden" name="id" value="${user.id}">
+            <input type="submit" value="edit">
+        </form>
+        <form method="delete">
+            <input type="hidden" name="command" value="user_delete">
+            <input type="hidden" name="id" value="${user.id}">
+            <input type="submit" value="delete">
+        </form><br/>
     </c:forEach>
 </div>
 </body>

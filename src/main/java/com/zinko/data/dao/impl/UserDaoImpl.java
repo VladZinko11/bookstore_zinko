@@ -2,7 +2,6 @@ package com.zinko.data.dao.impl;
 
 import com.zinko.data.dao.UserDao;
 import com.zinko.data.dao.connection.MyConnectionManager;
-import com.zinko.data.dao.connection.impl.MyConnectionManagerImpl;
 import com.zinko.data.dao.entity.User;
 import com.zinko.data.dao.entity.enums.Role;
 import lombok.RequiredArgsConstructor;
@@ -28,14 +27,14 @@ public class UserDaoImpl implements UserDao {
     private static final int COLUMN_INDEX_5 = 5;
     private static final int COLUMN_INDEX_6 = 6;
     private static final int PARAMETER_INDEX_6 = 6;
-    private static final String SELECT_COUNT = "SELECT COUNT(*) FROM public.user";
-    private static final String SELECT_BY_LAST_NAME = "SELECT u.id, u.first_name, u.last_name, u.email, u.password, e.role FROM public.user AS u JOIN public.enum_role AS e ON u.id_enum_role=e.id WHERE u.last_name=?";
-    private static final String SELECT_BY_EMAIL = "SELECT u.id, u.first_name, u.last_name, u.email, u.password, e.role FROM public.user AS u JOIN public.enum_role AS e ON u.id_enum_role=e.id WHERE u.email=?";
-    private static final String DELETE = "DELETE FROM public.user WHERE id=?";
-    private static final String UPDATE = "UPDATE public.user SET first_name=?, last_name=?, email=?, password=?, id_enum_role=? WHERE id=?";
-    private static final String SELECT_ALL = "SELECT u.id, u.first_name, u.last_name, u.email, u.password, e.role FROM public.user AS u JOIN public.enum_role AS e ON u.id_enum_role=e.id ORDER BY u.id";
-    private static final String SELECT_BY_ID = "SELECT u.id, u.first_name, u.last_name, u.email, u.password, e.role FROM public.user AS u JOIN public.enum_role AS e ON u.id_enum_role=e.id WHERE u.id=?";
-    private static final String CREATE = "INSERT INTO public.user (first_name, last_name, email, password, id_enum_role) " + "VALUES (?, ?, ?, ?, ?)";
+    private static final String SELECT_COUNT = "SELECT COUNT(*) FROM public.user WHERE deleted=false";
+    private static final String SELECT_BY_LAST_NAME = "SELECT u.id, u.first_name, u.last_name, u.email, u.password, e.role FROM public.user AS u JOIN public.enum_role AS e ON u.id_enum_role=e.id WHERE u.last_name=? AND u.deleted=false";
+    private static final String SELECT_BY_EMAIL = "SELECT u.id, u.first_name, u.last_name, u.email, u.password, e.role FROM public.user AS u JOIN public.enum_role AS e ON u.id_enum_role=e.id WHERE u.email=? AND u.deleted=false";
+    private static final String DELETE = "UPDATE public.user SET deleted=true WHERE id=?";
+    private static final String UPDATE = "UPDATE public.user SET first_name=?, last_name=?, email=?, password=?, id_enum_role=? WHERE id=? AND deleted=false";
+    private static final String SELECT_ALL = "SELECT u.id, u.first_name, u.last_name, u.email, u.password, e.role FROM public.user AS u JOIN public.enum_role AS e ON u.id_enum_role=e.id WHERE u.deleted=false ORDER BY u.id";
+    private static final String SELECT_BY_ID = "SELECT u.id, u.first_name, u.last_name, u.email, u.password, e.role FROM public.user AS u JOIN public.enum_role AS e ON u.id_enum_role=e.id WHERE u.id=? AND u.deleted=false";
+    private static final String CREATE = "INSERT INTO public.user (first_name, last_name, email, password, id_enum_role, deleted) VALUES (?, ?, ?, ?, ?, false)";
     private static final String SELECT_ID_ROLE = "SELECT id FROM enum_role WHERE role=?";
 
     private static User getUserFromResulSet(ResultSet resultSet) throws SQLException {
@@ -68,9 +67,9 @@ public class UserDaoImpl implements UserDao {
                 statement.setString(PARAMETER_INDEX_2, user.getLastName());
                 statement.setString(PARAMETER_INDEX_3, user.getEmail());
                 statement.setString(PARAMETER_INDEX_4, user.getPassword());
+                if(user.getRole()==null) user.setRole(Role.CUSTOMER);
                 statement.setLong(PARAMETER_INDEX_5, getIdRole(user, connection));
                 statement.executeUpdate();
-                log.debug("a database access occurred");
                 return findByEmail(user.getEmail());
             } else return null;
         } catch (SQLException e) {
@@ -139,7 +138,6 @@ public class UserDaoImpl implements UserDao {
             if (findById(user.getId()) != null) {
                 statement.setLong(PARAMETER_INDEX_1, user.getId());
                 statement.executeUpdate();
-                log.debug("a database access occurred");
                 return true;
             } else return false;
         } catch (SQLException e) {

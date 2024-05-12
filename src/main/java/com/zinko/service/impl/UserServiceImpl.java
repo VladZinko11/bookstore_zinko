@@ -2,7 +2,6 @@ package com.zinko.service.impl;
 
 import com.zinko.data.dao.UserDao;
 import com.zinko.data.dao.entity.User;
-import com.zinko.data.dao.impl.UserDaoImpl;
 import com.zinko.service.UserService;
 import com.zinko.service.dto.UserDto;
 import lombok.RequiredArgsConstructor;
@@ -15,6 +14,7 @@ import java.util.List;
 public class UserServiceImpl implements UserService {
 
     private final UserDao userDao;
+
 
     private UserDto toDto(User user) {
         if (user != null) {
@@ -42,7 +42,9 @@ public class UserServiceImpl implements UserService {
 
     public List<UserDto> findAll() {
         log.debug("UserService method findAll call");
-        return userDao.findAll().stream().map(this::toDto).toList();
+        List<UserDto> list = userDao.findAll().stream().map(this::toDto).toList();
+        if (list.isEmpty()) throw new RuntimeException("No registered users");
+        return list;
     }
 
     @Override
@@ -57,9 +59,10 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserDto create(UserDto userDto) {
         log.debug("UserService method create call {}", userDto);
-        User user = userDao.create(toUser(userDto));
-        if (user != null) return toDto(user);
-        else throw new RuntimeException("User with email: " + user.getEmail() + " is exist");
+        User user;
+        if ((user = userDao.findByEmail(userDto.getEmail())) != null)
+            throw new RuntimeException("User with email " + userDto.getEmail() + " is exist");
+        else return toDto(userDao.create(toUser(userDto)));
     }
 
     @Override
@@ -76,8 +79,12 @@ public class UserServiceImpl implements UserService {
             userDto.setPassword(userBefore.getPassword());
         if (userDto.getRole() == null)
             userDto.setRole(userBefore.getRole());
-        User newUser = userDao.update(toUser(userDto));
-        return toDto(newUser);
+        User user;
+        if ((user=userDao.findByEmail(userDto.getEmail()))!=null && !userBefore.equals(user))
+            throw new RuntimeException("User with email " + userDto.getEmail() + " is exist");
+        else {
+            return toDto(userDao.update(toUser(userDto)));
+        }
     }
 
     public void delete(Long id) {

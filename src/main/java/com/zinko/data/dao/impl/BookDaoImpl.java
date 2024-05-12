@@ -14,14 +14,15 @@ import java.util.List;
 @RequiredArgsConstructor
 public class BookDaoImpl implements BookDao {
     private final MyConnectionManager connectionManager;
-    public static final String SELECT_COUNT = "SELECT COUNT(*) FROM book";
-    public static final String SELECT_ALL_BY_AUTHOR = "SELECT id, author, title, isbn, publication_date FROM book WHERE author=?";
-    public static final String DELETE = "DELETE FROM book WHERE id=?";
-    public static final String SELECT_BY_ID = "SELECT id, author, title, isbn, publication_date FROM book WHERE id=?";
-    public static final String INSERT = "INSERT INTO book (author, title, isbn, publication_date) VALUES (?, ?, ?, ?)";
-    public static final String SELECT_ALL = "SELECT id, author, title, isbn, publication_date FROM book";
-    public static final String SELECT_BY_ISBN = "SELECT id, author, title, isbn, publication_date FROM book WHERE isbn=?";
-    public static final String UPDATE = "UPDATE book SET author=?, title=?,publication_date=? WHERE isbn=?";
+    public static final String SELECT_COUNT = "SELECT COUNT(*) FROM book WHERE deleted=false";
+    public static final String SELECT_ALL_BY_AUTHOR = "SELECT id, author, title, isbn, publication_date FROM book WHERE author=? AND deleted=false";
+    public static final String DELETE = "UPDATE book SET deleted=true WHERE id=?";
+    public static final String SELECT_BY_ID = "SELECT id, author, title, isbn, publication_date FROM book WHERE id=? AND deleted=false";
+
+    public static final String INSERT = "INSERT INTO book (author, title, isbn, publication_date, deleted) VALUES (?, ?, ?, ?, false)";
+    public static final String SELECT_ALL = "SELECT id, author, title, isbn, publication_date FROM book WHERE deleted=false";
+    public static final String SELECT_BY_ISBN = "SELECT id, author, title, isbn, publication_date FROM book WHERE isbn=? AND deleted=false";
+    public static final String UPDATE = "UPDATE book SET author=?, title=?,publication_date=? WHERE isbn=? AND deleted=false";
     public static final int PARAMETER_INDEX_1 = 1;
     public static final int PARAMETER_INDEX_2 = 2;
     public static final int PARAMETER_INDEX_3 = 3;
@@ -104,6 +105,7 @@ public class BookDaoImpl implements BookDao {
 
     @Override
     public Book updateBook(Book book) {
+        log.debug("BookDao method updateBook call {}", book);
         try (Connection connection = connectionManager.getConnection()) {
             Book book1 = findBookByIsbn(book.getIsbn());
             if (book1 != null) {

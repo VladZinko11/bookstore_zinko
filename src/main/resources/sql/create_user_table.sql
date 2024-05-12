@@ -10,7 +10,9 @@ CREATE TABLE public.user
     id BIGSERIAL UNIQUE PRIMARY KEY,
     first_name VARCHAR(50),
     last_name VARCHAR(50),
-    email VARCHAR(50) UNIQUE,
+    email VARCHAR(50),
     password VARCHAR(20),
-    id_enum_role BIGINT
+    id_enum_role BIGINT,
+    deleted BOOLEAN,
+    UNIQUE (id, email, deleted)
 );

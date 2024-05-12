@@ -11,6 +11,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.IOException;
+
 @Slf4j
 @WebServlet("/controller")
 public class Controller extends HttpServlet {
@@ -18,32 +19,50 @@ public class Controller extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        String command = req.getParameter("command");
-        Command commandInstance = commandFactory.getCommand(command);
-        log.debug(commandInstance.toString());
-        String page = commandInstance.execute(req);
-        log.debug(page);
-        req.getRequestDispatcher(page).forward(req, resp);
+        try {
+            String command = req.getParameter("command");
+            Command commandInstance = commandFactory.getCommand(command);
+            log.debug(commandInstance.toString());
+            String page = commandInstance.execute(req);
+            log.debug(page);
+            req.getRequestDispatcher(page).forward(req, resp);
+        } catch (RuntimeException e) {
+            log.error(e.getMessage(), e);
+            req.setAttribute("message", e.getMessage());
+            req.getRequestDispatcher("jsp/exception.jsp").forward(req, resp);
+        }
     }
 
     @Override
     protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        String command = req.getParameter("command");
-        Command commandInstance = commandFactory.getCommand(command);
-        log.debug(commandInstance.toString());
-        String page = commandInstance.execute(req);
-        log.debug(page);
-        req.getRequestDispatcher(page).forward(req, resp);
+        try {
+            String command = req.getParameter("command");
+            Command commandInstance = commandFactory.getCommand(command);
+            log.debug(commandInstance.toString());
+            String page = commandInstance.execute(req);
+            log.debug(page);
+            req.getRequestDispatcher(page).forward(req, resp);
+        } catch (RuntimeException e) {
+            log.error(e.getMessage(), e);
+            req.setAttribute("message", e.getMessage());
+            req.getRequestDispatcher("jsp/exception.jsp").forward(req, resp);
+        }
     }
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        String command = req.getParameter("command");
-        Command commandInstance = commandFactory.getCommand(command);
-        log.debug(commandInstance.toString());
-        String page = commandInstance.execute(req);
-        log.debug(page);
-        req.getRequestDispatcher(page).forward(req, resp);
+        try {
+            String command = req.getParameter("command");
+            Command commandInstance = commandFactory.getCommand(command);
+            log.debug(commandInstance.toString());
+            String page = commandInstance.execute(req);
+            log.debug(page);
+            req.getRequestDispatcher(page).forward(req, resp);
+        } catch (RuntimeException e) {
+            log.error(e.getMessage(), e);
+            req.setAttribute("message", e.getMessage());
+            req.getRequestDispatcher("jsp/exception.jsp").forward(req, resp);
+        }
     }
 
     @Override
@@ -53,7 +72,7 @@ public class Controller extends HttpServlet {
 
     @Override
     public void destroy() {
-        if(commandFactory!=null) {
+        if (commandFactory != null) {
             commandFactory.shutdown();
         }
     }

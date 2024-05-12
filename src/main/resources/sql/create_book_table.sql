@@ -8,5 +8,7 @@ CREATE TABLE public.book
     author VARCHAR(100),
     title VARCHAR(100),
     isbn VARCHAR(100) UNIQUE,
-    publication_date DATE
+    publication_date DATE,
+    deleted BOOLEAN,
+    UNIQUE (id, isbn, deleted)
 );

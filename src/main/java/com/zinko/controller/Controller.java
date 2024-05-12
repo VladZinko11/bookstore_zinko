@@ -19,38 +19,20 @@ public class Controller extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        try {
-            String command = req.getParameter("command");
-            Command commandInstance = commandFactory.getCommand(command);
-            log.debug(commandInstance.toString());
-            String page = commandInstance.execute(req);
-            log.debug(page);
-            req.getRequestDispatcher(page).forward(req, resp);
-        } catch (RuntimeException e) {
-            log.error(e.getMessage(), e);
-            req.setAttribute("message", e.getMessage());
-            req.getRequestDispatcher("jsp/exception.jsp").forward(req, resp);
-        }
+        process(req, resp);
     }
 
     @Override
     protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        try {
-            String command = req.getParameter("command");
-            Command commandInstance = commandFactory.getCommand(command);
-            log.debug(commandInstance.toString());
-            String page = commandInstance.execute(req);
-            log.debug(page);
-            req.getRequestDispatcher(page).forward(req, resp);
-        } catch (RuntimeException e) {
-            log.error(e.getMessage(), e);
-            req.setAttribute("message", e.getMessage());
-            req.getRequestDispatcher("jsp/exception.jsp").forward(req, resp);
-        }
+        process(req, resp);
     }
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        process(req, resp);
+    }
+
+    private void process(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         try {
             String command = req.getParameter("command");
             Command commandInstance = commandFactory.getCommand(command);

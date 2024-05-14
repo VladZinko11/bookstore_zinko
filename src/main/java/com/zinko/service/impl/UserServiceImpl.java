@@ -59,9 +59,8 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserDto create(UserDto userDto) {
         log.debug("UserService method create call {}", userDto);
-        User user;
-        if ((user = userDao.findByEmail(userDto.getEmail())) != null)
-            throw new RuntimeException("User with email " + userDto.getEmail() + " is exist");
+        if ((userDao.findByEmail(userDto.getEmail())) != null)
+            throw new RuntimeException("User with email " + userDto.getEmail() + " already exist");
         else return toDto(userDao.create(toUser(userDto)));
     }
 

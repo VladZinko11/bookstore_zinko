@@ -1,6 +1,5 @@
 package com.zinko.service;
 
-import com.zinko.data.dao.entity.User;
 import com.zinko.service.dto.UserDto;
 
 import java.util.List;

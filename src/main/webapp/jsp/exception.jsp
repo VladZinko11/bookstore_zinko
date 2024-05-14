@@ -14,7 +14,7 @@
 </head>
 <body>
 <h1 class="error">
-    ${message.toString()}" <br/>
+    ${message.toString()}<br/>
 </h1>
 </body>
 </html>

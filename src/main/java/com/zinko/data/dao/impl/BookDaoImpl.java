@@ -58,7 +58,7 @@ public class BookDaoImpl implements BookDao {
                 return findBookByIsbn(book.getIsbn());
             } else return null;
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("Oops, something wrong on server", e);
         }
     }
 
@@ -71,7 +71,7 @@ public class BookDaoImpl implements BookDao {
             if (resultSet.next()) return creatAndInitBookFromResultSet(resultSet);
             else return null;
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("Oops, something wrong on server", e);
         }
     }
 
@@ -86,7 +86,7 @@ public class BookDaoImpl implements BookDao {
             }
             return list;
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("Oops, something wrong on server", e);
         }
     }
 
@@ -99,7 +99,7 @@ public class BookDaoImpl implements BookDao {
             if (resultSet.next()) return creatAndInitBookFromResultSet(resultSet);
             else return null;
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("Oops, something wrong on server", e);
         }
     }
 
@@ -119,7 +119,7 @@ public class BookDaoImpl implements BookDao {
                 }
             } else return null;
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("Oops, something wrong on server", e);
         }
     }
 
@@ -135,7 +135,7 @@ public class BookDaoImpl implements BookDao {
                 }
             } else return false;
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("Oops, something wrong on server", e);
         }
     }
 
@@ -151,7 +151,7 @@ public class BookDaoImpl implements BookDao {
             }
             return list;
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("Oops, something wrong on server", e);
         }
     }
 
@@ -162,7 +162,7 @@ public class BookDaoImpl implements BookDao {
             ResultSet resultSet = statement.executeQuery(SELECT_COUNT);
             return resultSet.getLong(COLUMN_INDEX_1);
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("Oops, something wrong on server", e);
         }
     }
 }

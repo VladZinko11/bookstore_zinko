@@ -14,7 +14,8 @@
 </head>
 <body>
 <h1 class="error">
-    ${message.toString()}" <br/>
+    <dev class = "error_status">${pageContext.response.status}</dev>
+    ${message.toString()} <br/>
 </h1>
 </body>
 </html>

@@ -79,9 +79,6 @@
             <version>${log4j2.version}</version>
         </dependency>
 
-
-
-
     </dependencies>
 
     <build>
@@ -91,7 +88,7 @@
                 <artifactId>maven-war-plugin</artifactId>
                 <version>3.4.0</version>
                 <configuration>
-                    <webappDirectory>${env.CATALINA_HOME/webapps}</webappDirectory>
+                    <webappDirectory>${env.CATALINA_HOME}/webapps/bookstore</webappDirectory>
                 </configuration>
             </plugin>
             <plugin>
